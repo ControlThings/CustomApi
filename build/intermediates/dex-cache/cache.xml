@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="00d4c8eebf2b681073c72a26bd0849549e51c7cb">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-utils-25.0.1_2a334fe3d09ef2808188703f1c3c9c3ea21f17b3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="f7ac4b327fdb9e2ee386f5adc46164927658de4b">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-25.0.1_9a907500a44c9674edfb37ced4fd3f4d67c0e06a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="51eba4a4dd73044f90a9d58dd7ca34adbebfcf4e">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-25.0.1_2b3cfb4ff7dc57ca395ada4d7c77f808d9e5146c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="6a1479afe9f1b3645e1cd9a87318976893472818">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/com.android.support-support-media-compat-25.0.1_8ee2c0d385ed43e7e38c30fa11d0553a8ed9bb8c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="3af8cc51ef7088e56f132780da8c0bd858b6a6ad">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_812e4f6dae9d03e6e6497a370210eed7c172d143.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c5b7145fb34779b6639147b8f2f8dd77c0db771b">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_ad01ae738d744c0d2b77c58a2306e27b0da2483b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/CustomApi/MistCustomApi/unspecified/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="ca33dcf52b14bc5b94c07b3cae5df0f457e20bd9">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/CustomApi-MistCustomApi-unspecified_e1c31d0c4a0ae6323dfc9fdc1d4b1eb6ef1ee840.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c0bd6ffb002a85b5e7cad29f8558d1cc59539679">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_6877946c97ffaf6cc3d3850ed96f75a0b5d06bcb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-25.0.1_3aadedc16554ff460b92dedaeed97ca329448166.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="772bed2d992b67b9d0327f766cc95cd63031dcd3">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-25.0.1_e8cc50172112572b4644dbef67ff4cd7ffa14f61.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="b24e1c688744078e1fa833ffadf696794761bbe5">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-25.0.1_15d58d89da8d12c693706eb8a840999a79fb01d2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="f83b00041ecfba705603fec40363416c7de69719">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_0c9b260abff2b90c6755895e48c5c8ea1cba9377.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="bc7e99e8d0fc279a05aa91378530f467ad62d443">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-ui-25.0.1_ebc0ae35a68f526d22348d6e31fff82aeaaa35f9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/CustomApi/MistCustomApi/unspecified/jars/libs/bson-3.2.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="eccef9fab4af8a4ef3070ec04cf80db40c7e02a2">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/bson-3.2.2_ac20943a8c4bc162ce2be22f3d2fe34682bb6ca1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="26c6eef571592c91f29e56fda0bac73321de0c92">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/com.android.support-support-fragment-25.0.1_bc0ac8bd433de94661ee13ef5ab2f10f6d7ef555.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_9b5e6938e448872b1003cae732c7f083e3841f48.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/jeppe/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.0.1/support-annotations-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="a09194311f8f89c3e6db09d79f50897a889d615e">
+        <dex dex="/Users/jeppe/Work/Android/CustomApi/app/build/intermediates/pre-dexed/debug/support-annotations-25.0.1_45c5a7cfad0268668b5d5da696d07f44287fb5da.jar" />
+    </item>
+
+</items>
