@@ -8,5 +8,6 @@
 #include <jni.h>
 
 jobject get_MistApiBridge_instance(void);
+JavaVM *get_javaVM(void);
 
 #endif //CUSTOMAPI_MISTCUSTOMAPI_H

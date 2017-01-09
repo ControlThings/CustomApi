@@ -6,7 +6,7 @@ include $(CLEAR_VARS)
 
 
 LOCAL_MODULE    := mistcustomapi
-LOCAL_SRC_FILES := 
+LOCAL_SRC_FILES := jni_utils.c mist_api_bridge_jni.c request_interface.c
 LOCAL_C_INCLUDES := 
 LOCAL_LDLIBS := -llog
 LOCAL_CFLAGS := -O2 -Wall -Wno-pointer-sign -Werror -Wno-unused-variable -Wno-unused-function -fvisibility=hidden

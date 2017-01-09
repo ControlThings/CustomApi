@@ -12,11 +12,13 @@
 #include <android/log.h>
 #include "jni_utils.h"
 
+#define TAG "mistcustomapi"
+
 
 int android_wish_printf(const char *format, ...) {
     va_list arg_list;
     va_start(arg_list, format);
-    int ret = __android_log_vprint(ANDROID_LOG_DEBUG, "native", format, arg_list);
+    int ret = __android_log_vprint(ANDROID_LOG_DEBUG, TAG, format, arg_list);
     va_end(arg_list);
     return ret;
 }
@@ -24,7 +26,7 @@ int android_wish_printf(const char *format, ...) {
 /* A version of the printf command that takes a variable length argument list as a parameter.
  * This is needed as the function which will be passed down to the Wish library. (the "normal" printf version above will not do) */
 int android_wish_vprintf(const char *format, va_list arg_list) {
-    int ret = __android_log_vprint(ANDROID_LOG_DEBUG, "native", format, arg_list);
+    int ret = __android_log_vprint(ANDROID_LOG_DEBUG, TAG, format, arg_list);
     return ret;
 }
 
