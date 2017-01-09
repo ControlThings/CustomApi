@@ -4,11 +4,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Base64;
 import android.util.Log;
 
 import java.net.ContentHandler;
+import java.util.Random;
 
 import mist.sandbox.AppToMist;
 import mist.sandbox.Callback;
@@ -19,6 +23,8 @@ import mist.sandbox.Callback;
 
 class MistApiBridge {
     private final String TAG = "Mist Api Bridge";
+
+    private final static String pref = "mist_pref";
 
     private Context context;
     private boolean mBound = false;
@@ -34,14 +40,40 @@ class MistApiBridge {
         context.bindService(mistSandbox, mConnection, 0);
     }
 
+    private byte[] getId() {
+        SharedPreferences preferences = context.getSharedPreferences(pref, Context.MODE_PRIVATE);
+        String idString = preferences.getString("id", null);
+        if (idString == null) {
+            byte[] id = new byte[32];
+            new Random().nextBytes(id);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("id", Base64.encodeToString(id, Base64.DEFAULT));
+            editor.commit();
+            return id;
+        } else {
+            return Base64.decode(idString, Base64.DEFAULT);
+        }
+    }
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             Log.d(TAG, "onServiceConnected");
             appToMist = AppToMist.Stub.asInterface(iBinder);
-            mBound = true;
+           try {
+               if (appToMist.login(new Binder(), getId(), "name")) {
+                   //jni.connected(true);
+                   mBound = true;
+               } else {
+                   context.unbindService(mConnection);
+               }
+           } catch (RemoteException e) {
+               Log.d(TAG, "remote exeption in register:");
+           }
+
+
             //register/login
-            jni.connected(true);
+            //
         }
 
         @Override
@@ -49,7 +81,6 @@ class MistApiBridge {
             mBound = false;
         }
     };
-
 
 
     int wishApiRequest(String op, byte[] data, Callback listener) {
