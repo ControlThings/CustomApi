@@ -6,9 +6,12 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.WindowDecorActionBar;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 import mist.customapi.Identity;
 import mist.customapi.MistIdentity;
@@ -24,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
 
         Intent intent = new Intent(this, MistService.class);
         startService(intent);
