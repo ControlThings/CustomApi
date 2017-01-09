@@ -5,4 +5,5 @@
 /local.properties
 /app/src/main/obj
 /app/app-release.apk
-
+/MistCustomApi/src/main/obj
+/MistCustomApi/src/main/libs
