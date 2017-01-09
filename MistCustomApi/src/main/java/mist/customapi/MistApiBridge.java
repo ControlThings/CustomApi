@@ -60,7 +60,7 @@ class MistApiBridge {
             try {
                 id = appToMist.wishApiRequest(op, data, listener);
             } catch (RemoteException e) {
-                Log.e(TAG, "RemoteException occured in wishApi: " + e);
+                Log.e(TAG, "RemoteException occured while performing wishApiRequest: " + e);
             }
         }
         return id;
@@ -74,11 +74,24 @@ class MistApiBridge {
             try {
                 id = appToMist.mistApiRequest(op, data, listener);
             } catch (RemoteException e) {
-                Log.e(TAG, "RemoteException occured in wishApi: " + e);
+                Log.e(TAG, "RemoteException occured while performing mistApiRequest " + e);
             }
         }
         return id;
     }
+
+    void mistApiCancel(int id) {
+        if (!mBound) {
+            Log.v(TAG, "Error: not bound");
+        } else {
+            try {
+                appToMist.mistApiCancel(id);
+            } catch (RemoteException e) {
+                Log.e(TAG, "RemoteException occured while performing mistApiCancel  " + e);
+            }
+        }
+    }
+
 
     void unBind() {
         if (mBound) {
