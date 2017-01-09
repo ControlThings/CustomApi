@@ -10,8 +10,8 @@ import mist.customapi.ErrorCallback;
 
 public class Identity {
 
-    public static void list(MistService service, ListCb callback) {
-        IdentityList.request(service, callback);
+    public static void list(ListCb callback) {
+        IdentityList.request(callback);
     }
 
     public interface ListCb extends ErrorCallback {
