@@ -7,21 +7,21 @@ import android.content.Context;
  */
 
 class MistApiBridgeJni {
-  /*  static {
+    static {
         System.loadLibrary("mistcustomapi");
-    }*/
+    }
 
     MistApiBridge mistApiBridge;
     MistApiBridgeJni(Context context) {
         mistApiBridge = new MistApiBridge(context, this);
-   //     register(mistApiBridge);
+        register(mistApiBridge);
     }
 
-   // native void register(MistApiBridge bridge);
-  //  native void connected(boolean connected);
+    native void register(MistApiBridge bridge);
+    native void connected(boolean connected);
 
     void disconnect() {
-     //   connected(false);
+        connected(false);
         mistApiBridge.unBind();
     }
 }
