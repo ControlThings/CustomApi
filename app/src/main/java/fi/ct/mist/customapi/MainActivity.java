@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MistService.class);
         startService(intent);
-        bindService(intent, mConnection, 0);
     }
 
     private void ready() {
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
 
-                        Identity.list(mistService, new Identity.ListCb() {
+                        Identity.list(new Identity.ListCb() {
                             @Override
                             public void cb(ArrayList<MistIdentity> identityList) {
                                 for (MistIdentity identity : identityList) {
@@ -63,26 +62,4 @@ public class MainActivity extends AppCompatActivity {
                 1000);
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            mBound = true;
-            MistService.MistServiceBinder binder = (MistService.MistServiceBinder) iBinder;
-            mistService = binder.getService();
-            ready();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mBound = false;
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mBound) {
-            unbindService(mConnection);
-        }
-    }
 }

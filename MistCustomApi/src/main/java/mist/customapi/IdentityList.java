@@ -20,7 +20,7 @@ import mist.sandbox.Callback;
 
 
 class IdentityList {
-    static void request(MistService service, Identity.ListCb callback) {
+    static void request(Identity.ListCb callback) {
         final String op = "identity.list";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
@@ -32,7 +32,7 @@ class IdentityList {
         writer.flush();
 
 
-        service.wishApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
+        RequestInterface.getInstance().wishApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
             private Identity.ListCb callback;
 
             @Override
