@@ -20,6 +20,7 @@ import mist.sandbox.Callback;
 
 
 class IdentityList {
+    /*
     static void request(Identity.ListCb callback) {
         final String op = "identity.list";
 
@@ -72,5 +73,5 @@ class IdentityList {
             }
 
         }.init(callback));
-    }
+    }*/
 }
