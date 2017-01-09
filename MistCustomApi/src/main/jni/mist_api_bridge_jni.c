@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+/* javah -classpath ../../../build/intermediates/classes/debug:/home/jan/Android/Sdk/platforms/android-16/android.jar -o request_interface.h mist.customapi.RequestInterface */
 #include "mist_api_bridge_jni.h"
 #include "jni_utils.h"
 
@@ -48,6 +49,6 @@ JNIEXPORT void JNICALL Java_mist_customapi_MistApiBridgeJni_register (JNIEnv *en
  * Signature: (Z)V
  */
 JNIEXPORT void JNICALL Java_mist_customapi_MistApiBridgeJni_connected(JNIEnv *env, jobject jthis, jboolean connected) {
-
+    android_wish_printf("MistApiBridgeJni connected: %i", connected);
 }
 
