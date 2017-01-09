@@ -60,9 +60,12 @@ class MistApiBridge {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             Log.d(TAG, "onServiceConnected");
             appToMist = AppToMist.Stub.asInterface(iBinder);
+
+            /* FIXME JN: commented this stuff out for testing */
+            /*
            try {
                if (appToMist.login(new Binder(), getId(), "name")) {
-                   //jni.connected(true);
+                   jni.connected(true);
                    mBound = true;
                } else {
                    context.unbindService(mConnection);
@@ -70,10 +73,13 @@ class MistApiBridge {
            } catch (RemoteException e) {
                Log.d(TAG, "remote exeption in register:");
            }
+           */
 
 
-            //register/login
+            //FIXME FIXME register/login
             //
+            jni.connected(true);
+            mBound = true;
         }
 
         @Override
