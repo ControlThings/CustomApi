@@ -20,7 +20,7 @@ import mist.sandbox.Callback;
  * Created by jeppe on 25/07/16.
  */
 class ControlModel {
-    static void request(Peer peer, Control.ModelCb callback) {
+    static int request(Peer peer, Control.ModelCb callback) {
         final String op = "control.model";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
@@ -41,7 +41,7 @@ class ControlModel {
         writer.writeEndDocument();
         writer.flush();
 
-        RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
+        int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
             private Control.ModelCb callback;
 
             @Override
@@ -68,7 +68,7 @@ class ControlModel {
 
             @Override
             public void err(int code, String msg) throws RemoteException {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
+                MistLog.err(op, code, msg);
                 callback.err(code, msg);
             }
 
@@ -77,6 +77,13 @@ class ControlModel {
                 return this;
             }
         }.init(callback));
+
+        if (requestId == 0) {
+            callback.err(0, "request fail");
+            MistLog.err(op, requestId, "request fail");
+        }
+
+        return requestId;
     }
 
 

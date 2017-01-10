@@ -19,7 +19,7 @@ import mist.sandbox.Callback;
 
 
 class IdentityList {
-    static void request(Identity.ListCb callback) {
+    static int request(Identity.ListCb callback) {
         final String op = "identity.list";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
@@ -30,8 +30,7 @@ class IdentityList {
         writer.writeEndDocument();
         writer.flush();
 
-
-        RequestInterface.getInstance().wishApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
+        int requestId = RequestInterface.getInstance().wishApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
             private Identity.ListCb callback;
 
             @Override
@@ -61,7 +60,7 @@ class IdentityList {
 
             @Override
             public void err(int code, String msg) throws RemoteException {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
+                MistLog.err(op, code, msg);
                 callback.err(code, msg);
             }
 
@@ -71,5 +70,13 @@ class IdentityList {
             }
 
         }.init(callback));
+
+
+        if (requestId == 0) {
+            callback.err(0, "request fail");
+            MistLog.err(op, requestId, "request fail");
+        }
+
+        return requestId;
     }
 }

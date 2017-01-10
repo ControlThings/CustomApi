@@ -37,6 +37,23 @@ public class MainActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
+                        /*
+                        Mist.signals(new Mist.SignalsCb() {
+                            @Override
+                            public void cb(String signal) {
+
+                            }
+
+                            @Override
+                            public void err(int code, String msg) {
+
+                            }
+
+                            @Override
+                            public void end() {
+
+                            }
+                        }); */
 
                         Identity.list(new Identity.ListCb() {
                             @Override
@@ -55,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                             public void end() {
                             }
                         });
-
+/*
 
                         Mist.listPeers(new Mist.ListPeersCb() {
                             @Override
@@ -89,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                             public void end() {
 
                             }
-                        });
+                        });*/
                     }
                 },
                 1000);
