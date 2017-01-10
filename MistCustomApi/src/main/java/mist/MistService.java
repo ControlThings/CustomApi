@@ -1,20 +1,12 @@
-package mist.customapi;
+package mist;
 
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.util.UUID;
-
-import mist.sandbox.AppToMist;
-import mist.sandbox.Callback;
+import mist.MistApiBridgeJni;
 
 /**
  * Created by jeppe on 1/4/17.

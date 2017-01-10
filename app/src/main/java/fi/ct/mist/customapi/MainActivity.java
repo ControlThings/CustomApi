@@ -1,21 +1,20 @@
 package fi.ct.mist.customapi;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.WindowDecorActionBar;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.UUID;
+import org.json.JSONObject;
 
-import mist.customapi.Identity;
-import mist.customapi.MistIdentity;
-import mist.customapi.MistService;
+import java.util.ArrayList;
+
+import mist.Peer;
+import mist.api.Control;
+import mist.api.Identity;
+import mist.MistIdentity;
+import mist.MistService;
+import mist.api.Mist;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +53,41 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void end() {
+                            }
+                        });
+
+
+                        Mist.listPeers(new Mist.ListPeersCb() {
+                            @Override
+                            public void cb(ArrayList<Peer> peers) {
+                                for (Peer peer : peers) {
+                                    Control.model(peer, new Control.ModelCb() {
+                                        @Override
+                                        public void cb(JSONObject data) {
+                                            Log.d("Model:", data.toString());
+                                        }
+
+                                        @Override
+                                        public void err(int code, String msg) {
+
+                                        }
+
+                                        @Override
+                                        public void end() {
+
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void err(int code, String msg) {
+
+                            }
+
+                            @Override
+                            public void end() {
+
                             }
                         });
                     }

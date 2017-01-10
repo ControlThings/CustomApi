@@ -1,8 +1,8 @@
-package mist.customapi;
+package mist.api;
 
 import java.util.ArrayList;
 
-import mist.customapi.ErrorCallback;
+import mist.MistIdentity;
 
 /**
  * Created by jeppe on 11/30/16.

@@ -1,6 +1,8 @@
-package mist.customapi;
+package mist;
 
 import android.content.Context;
+
+import mist.MistApiBridge;
 
 /**
  * Created by jan on 1/9/17.

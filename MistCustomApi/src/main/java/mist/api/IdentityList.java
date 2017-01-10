@@ -1,6 +1,5 @@
-package mist.customapi;
+package mist.api;
 
-import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -14,8 +13,8 @@ import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
 
-import mist.customapi.Identity;
-import mist.customapi.MistService;
+import mist.MistIdentity;
+import mist.RequestInterface;
 import mist.sandbox.Callback;
 
 

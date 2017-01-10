@@ -1,4 +1,4 @@
-package mist.customapi;
+package mist.api;
 
 /**
  * Created by akaustel on 12/8/16.

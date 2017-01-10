@@ -1,4 +1,4 @@
-package mist.customapi;
+package mist;
 
 import mist.sandbox.Callback;
 

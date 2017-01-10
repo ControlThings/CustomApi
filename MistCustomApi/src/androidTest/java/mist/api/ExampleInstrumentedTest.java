@@ -1,4 +1,4 @@
-package mist.customapi;
+package mist.api;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

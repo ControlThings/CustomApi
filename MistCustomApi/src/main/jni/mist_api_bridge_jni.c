@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-/* javah -classpath ../../../build/intermediates/classes/debug:/home/jan/Android/Sdk/platforms/android-16/android.jar -o request_interface.h mist.customapi.RequestInterface */
+/* javah -classpath ../../../build/intermediates/classes/debug:/home/jan/Android/Sdk/platforms/android-16/android.jar -o request_interface.h mist.RequestInterface */
 #include "mist_api_bridge_jni.h"
 #include "jni_utils.h"
 
@@ -23,11 +23,11 @@ JavaVM *get_javaVM(void) {
 }
 
 /*
- * Class:     mist_customapi_MistApiBridgeJni
+ * Class:     mist_MistApiBridgeJni
  * Method:    register
- * Signature: (Lmist/customapi/MistApiBridge;)V
+ * Signature: (Lmist//MistApiBridge;)V
  */
-JNIEXPORT void JNICALL Java_mist_customapi_MistApiBridgeJni_register (JNIEnv *env, jobject jthis, jobject mistApiBridge_localref) {
+JNIEXPORT void JNICALL Java_mist_MistApiBridgeJni_register (JNIEnv *env, jobject jthis, jobject mistApiBridge_localref) {
     android_wish_printf("register.");
     /* Register a refence to the JVM */
     if ((*env)->GetJavaVM(env,&javaVM) < 0) {
@@ -44,11 +44,11 @@ JNIEXPORT void JNICALL Java_mist_customapi_MistApiBridgeJni_register (JNIEnv *en
 }
 
 /*
- * Class:     mist_customapi_MistApiBridgeJni
+ * Class:     mist_MistApiBridgeJni
  * Method:    connected
  * Signature: (Z)V
  */
-JNIEXPORT void JNICALL Java_mist_customapi_MistApiBridgeJni_connected(JNIEnv *env, jobject jthis, jboolean connected) {
+JNIEXPORT void JNICALL Java_mist_MistApiBridgeJni_connected(JNIEnv *env, jobject jthis, jboolean connected) {
     android_wish_printf("MistApiBridgeJni connected: %i", connected);
 }
 

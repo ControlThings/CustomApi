@@ -1,4 +1,4 @@
-package mist.customapi;
+package mist;
 
 /**
  * Created by jeppe on 8/19/16.

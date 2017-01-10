@@ -1,10 +1,10 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="mist.customapi">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="mist.api">
 
     <application android:allowBackup="true" android:label="@string/app_name"
         android:supportsRtl="true">
 
         <service
-            android:name="mist.customapi.MistService"
+            android:name="mist.api.mist.MistService"
             android:exported="false"
             android:stopWithTask="true"/>
 

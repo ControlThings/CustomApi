@@ -1,4 +1,4 @@
-package mist.customapi;
+package mist.api;
 
 import org.junit.Test;
 

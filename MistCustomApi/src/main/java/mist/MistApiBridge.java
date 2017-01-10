@@ -1,4 +1,4 @@
-package mist.customapi;
+package mist;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,6 +14,7 @@ import android.util.Log;
 import java.net.ContentHandler;
 import java.util.Random;
 
+import mist.MistApiBridgeJni;
 import mist.sandbox.AppToMist;
 import mist.sandbox.Callback;
 
@@ -61,8 +62,6 @@ class MistApiBridge {
             Log.d(TAG, "onServiceConnected");
             appToMist = AppToMist.Stub.asInterface(iBinder);
 
-            /* FIXME JN: commented this stuff out for testing */
-            /*
            try {
                if (appToMist.login(new Binder(), getId(), "name")) {
                    jni.connected(true);
@@ -73,13 +72,12 @@ class MistApiBridge {
            } catch (RemoteException e) {
                Log.d(TAG, "remote exeption in register:");
            }
-           */
 
 
             //FIXME FIXME register/login
             //
-            jni.connected(true);
-            mBound = true;
+          //  jni.connected(true);
+          //  mBound = true;
         }
 
         @Override

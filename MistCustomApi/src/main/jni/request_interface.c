@@ -5,18 +5,18 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-/* javah -classpath ../../../build/intermediates/classes/debug:/home/jan/Android/Sdk/platforms/android-25/android.jar -o request_interface.h mist.customapi.RequestInterface */
+/* javah -classpath ../../../build/intermediates/classes/debug:/home/jan/Android/Sdk/platforms/android-25/android.jar -o request_interface.h mist.RequestInterface */
 #include "request_interface.h"
 #include "mistcustomapi.h"
 #include "jni_utils.h"
 
 
 /*
- * Class:     mist_customapi_RequestInterface
+ * Class:     mist_RequestInterface
  * Method:    jniWishApiRequest
  * Signature: (Ljava/lang/String;[BLmist/sandbox/Callback;)I
  */
-JNIEXPORT jint JNICALL Java_mist_customapi_RequestInterface_jniWishApiRequest
+JNIEXPORT jint JNICALL Java_mist_RequestInterface_jniWishApiRequest
   (JNIEnv *env, jobject jthis, jstring java_op, jbyteArray java_args_bson, jobject java_callback_localref) {
     int id = 0;
 
@@ -40,11 +40,11 @@ JNIEXPORT jint JNICALL Java_mist_customapi_RequestInterface_jniWishApiRequest
 }
 
 /*
- * Class:     mist_customapi_RequestInterface
+ * Class:     mist_RequestInterface
  * Method:    jniMistApiRequest
  * Signature: (Ljava/lang/String;[BLmist/sandbox/Callback;)I
  */
-JNIEXPORT jint JNICALL Java_mist_customapi_RequestInterface_jniMistApiRequest
+JNIEXPORT jint JNICALL Java_mist_RequestInterface_jniMistApiRequest
   (JNIEnv *env, jobject jthis, jstring java_op, jbyteArray java_args_bson, jobject java_callback_localref) {
     int id = 0;
 
@@ -68,11 +68,11 @@ JNIEXPORT jint JNICALL Java_mist_customapi_RequestInterface_jniMistApiRequest
 }
 
 /*
- * Class:     mist_customapi_RequestInterface
+ * Class:     mist_RequestInterface
  * Method:    jniMistApiRequestCancel
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_mist_customapi_RequestInterface_jniMistApiRequestCancel(JNIEnv *env, jobject jthis, jint rpc_id_to_cancel) {
+JNIEXPORT void JNICALL Java_mist_RequestInterface_jniMistApiRequestCancel(JNIEnv *env, jobject jthis, jint rpc_id_to_cancel) {
 
     jobject mistApiBridgeInstance = get_MistApiBridge_instance();
     jclass mistApiBridgeClass = (*env)->GetObjectClass(env, mistApiBridgeInstance);
