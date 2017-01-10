@@ -72,12 +72,6 @@ class MistApiBridge {
            } catch (RemoteException e) {
                Log.d(TAG, "remote exeption in register:");
            }
-
-
-            //FIXME FIXME register/login
-            //
-          //  jni.connected(true);
-          //  mBound = true;
         }
 
         @Override
