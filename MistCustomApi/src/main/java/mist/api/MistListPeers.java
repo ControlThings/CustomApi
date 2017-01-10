@@ -23,7 +23,7 @@ import mist.sandbox.Callback;
 
 class MistListPeers {
 
-    static void request(Mist.ListPeersCb callback) {
+    static int request(Mist.ListPeersCb callback) {
         final String op = "mist.listServices";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
@@ -34,7 +34,7 @@ class MistListPeers {
         writer.writeEndDocument();
         writer.flush();
 
-        RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
+        int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
             private Mist.ListPeersCb callback;
 
             @Override
@@ -74,7 +74,7 @@ class MistListPeers {
 
             @Override
             public void err(int code, String msg) throws RemoteException {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
+                MistLog.err(op, code, msg);
                 callback.err(code, msg);
             }
 
@@ -83,5 +83,12 @@ class MistListPeers {
                 return this;
             }
         }.init(callback));
+
+        if (requestId == 0) {
+            callback.err(0, "request fail");
+            MistLog.err(op, requestId, "request fail");
+        }
+
+        return requestId;
     }
 }

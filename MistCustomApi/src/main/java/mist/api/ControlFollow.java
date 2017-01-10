@@ -38,7 +38,7 @@ class ControlFollow {
         writer.writeEndDocument();
         writer.flush();
 
-        return RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
+        int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
             private Control.FollowCb callback;
 
             @Override
@@ -74,7 +74,7 @@ class ControlFollow {
 
             @Override
             public void err(int code, String msg) throws RemoteException {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
+                MistLog.err(op, code, msg);
                 callback.err(code, msg);
             }
 
@@ -83,7 +83,17 @@ class ControlFollow {
                 return this;
             }
         }.init(callback));
+
+
+        if (requestId == 0) {
+            callback.err(0, "request fail");
+            MistLog.err(op, requestId, "request fail");
+        }
+
+        return requestId;
     }
+
+
 }
 
 

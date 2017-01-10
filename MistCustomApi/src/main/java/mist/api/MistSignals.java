@@ -28,7 +28,7 @@ class MistSignals {
         writer.writeEndDocument();
         writer.flush();
 
-        final int id = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
+        int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
             private Mist.SignalsCb callback;
 
             @Override
@@ -50,7 +50,7 @@ class MistSignals {
 
             @Override
             public void err(int code, String msg) throws RemoteException {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
+                MistLog.err(op, code, msg);
                 callback.err(code, msg);
             }
 
@@ -60,6 +60,11 @@ class MistSignals {
             }
         }.init(callback));
 
-        return id;
+        if (requestId == 0) {
+            callback.err(0, "request fail");
+            MistLog.err(op, requestId, "request fail");
+        }
+
+        return requestId;
     }
 }

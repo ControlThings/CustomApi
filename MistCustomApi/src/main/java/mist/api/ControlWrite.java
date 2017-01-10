@@ -16,20 +16,20 @@ import mist.sandbox.Callback;
 
 class ControlWrite {
 
-    static void request(Peer peer, String epid, Boolean state, Control.WriteCb callback) {
-        send(peer, epid, state, null, null, null, callback);
+    static int request(Peer peer, String epid, Boolean state, Control.WriteCb callback) {
+       return send(peer, epid, state, null, null, null, callback);
     }
-    static void request(Peer peer, String epid, int state, Control.WriteCb callback) {
-        send(peer, epid, null, state, null, null, callback);
+    static int request(Peer peer, String epid, int state, Control.WriteCb callback) {
+        return send(peer, epid, null, state, null, null, callback);
     }
-    static void request(Peer peer, String epid, float state, Control.WriteCb callback) {
-        send(peer, epid, null, null, state, null, callback);
+    static int request(Peer peer, String epid, float state, Control.WriteCb callback) {
+        return send(peer, epid, null, null, state, null, callback);
     }
-    static void request(Peer peer, String epid, String state, Control.WriteCb callback) {
-        send(peer, epid, null, null, null, state, callback);
+    static int request(Peer peer, String epid, String state, Control.WriteCb callback) {
+        return send(peer, epid, null, null, null, state, callback);
     }
 
-    private static void send(Peer peer, String epid, Boolean boolState, Integer intState, Float floatState, String stringState, Control.WriteCb callback) {
+    private static int send(Peer peer, String epid, Boolean boolState, Integer intState, Float floatState, String stringState, Control.WriteCb callback) {
         final String op = "control.write";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
@@ -65,7 +65,7 @@ class ControlWrite {
         writer.writeEndDocument();
         writer.flush();
 
-        RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
+       int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
             private Control.WriteCb callback;
 
             @Override
@@ -86,7 +86,7 @@ class ControlWrite {
 
             @Override
             public void err(int code, String msg) throws RemoteException {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
+                MistLog.err(op, code, msg);
                 callback.err(code, msg);
             }
 
@@ -95,5 +95,12 @@ class ControlWrite {
                 return this;
             }
         }.init(callback));
+
+        if (requestId == 0) {
+            callback.err(0, "request fail");
+            MistLog.err(op, requestId, "request fail");
+        }
+
+        return requestId;
     }
 }
