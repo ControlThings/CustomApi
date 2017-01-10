@@ -4,7 +4,7 @@
         android:supportsRtl="true">
 
         <service
-            android:name="mist.api.mist.MistService"
+            android:name="mist.MistService"
             android:exported="false"
             android:stopWithTask="true"/>
 
