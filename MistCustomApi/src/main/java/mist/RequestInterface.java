@@ -47,8 +47,22 @@ public class RequestInterface {
         jniMistApiRequestCancel(id);
     }
 
+    /**
+     * JNI call to wishApiRequest
+     * @param op
+     * @param argsBson
+     * @param cb
+     * @return the RPC id of the request, or 0 for fail
+     */
     native int jniWishApiRequest(String op, byte[] argsBson, Callback cb);
 
+    /**
+     * JNI call to mistApiRequest
+     * @param op
+     * @param argsBson
+     * @param cb
+     * @return the RPC id of the request, or 0 for fail
+     */
     native int jniMistApiRequest(String op, byte[] argsBson, Callback cb);
 
     native void jniMistApiRequestCancel(int id);

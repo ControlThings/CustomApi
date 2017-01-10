@@ -9,5 +9,6 @@
 
 jobject get_MistApiBridge_instance(void);
 JavaVM *get_javaVM(void);
+bool is_connected(void);
 
 #endif //CUSTOMAPI_MISTCUSTOMAPI_H

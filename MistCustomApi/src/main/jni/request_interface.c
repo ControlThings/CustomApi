@@ -18,9 +18,19 @@
  */
 JNIEXPORT jint JNICALL Java_mist_RequestInterface_jniWishApiRequest
   (JNIEnv *env, jobject jthis, jstring java_op, jbyteArray java_args_bson, jobject java_callback_localref) {
+
+    if (!is_connected()) {
+        android_wish_printf("Not connected!");
+        return 0;
+    }
+
     int id = 0;
 
     jobject mistApiBridgeInstance = get_MistApiBridge_instance();
+    if (mistApiBridgeInstance == NULL) {
+        android_wish_printf("Error: mistApiBridgeInstance is null");
+        return 0;
+    }
     jclass mistApiBridgeClass = (*env)->GetObjectClass(env, mistApiBridgeInstance);
     if (mistApiBridgeClass == NULL) {
         android_wish_printf("Cannot get MistApiBridge class");
@@ -44,11 +54,20 @@ JNIEXPORT jint JNICALL Java_mist_RequestInterface_jniWishApiRequest
  * Method:    jniMistApiRequest
  * Signature: (Ljava/lang/String;[BLmist/sandbox/Callback;)I
  */
-JNIEXPORT jint JNICALL Java_mist_RequestInterface_jniMistApiRequest
-  (JNIEnv *env, jobject jthis, jstring java_op, jbyteArray java_args_bson, jobject java_callback_localref) {
+JNIEXPORT jint JNICALL Java_mist_RequestInterface_jniMistApiRequest(JNIEnv *env, jobject jthis, jstring java_op, jbyteArray java_args_bson, jobject java_callback_localref) {
+
+    if (!is_connected()) {
+      android_wish_printf("Not connected!");
+      return 0;
+    }
+
     int id = 0;
 
     jobject mistApiBridgeInstance = get_MistApiBridge_instance();
+    if (mistApiBridgeInstance == NULL) {
+        android_wish_printf("Error: mistApiBridgeInstance is null");
+        return 0;
+    }
     jclass mistApiBridgeClass = (*env)->GetObjectClass(env, mistApiBridgeInstance);
     if (mistApiBridgeClass == NULL) {
         android_wish_printf("Cannot get MistApiBridge class");
@@ -73,6 +92,11 @@ JNIEXPORT jint JNICALL Java_mist_RequestInterface_jniMistApiRequest
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_mist_RequestInterface_jniMistApiRequestCancel(JNIEnv *env, jobject jthis, jint rpc_id_to_cancel) {
+
+    if (!is_connected()) {
+      android_wish_printf("Not connected!");
+      return;
+    }
 
     jobject mistApiBridgeInstance = get_MistApiBridge_instance();
     jclass mistApiBridgeClass = (*env)->GetObjectClass(env, mistApiBridgeInstance);

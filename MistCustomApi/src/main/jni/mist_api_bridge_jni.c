@@ -22,6 +22,12 @@ JavaVM *get_javaVM(void) {
     return javaVM;
 }
 
+static bool connected = false;
+
+bool is_connected(void) {
+    return connected;
+}
+
 /*
  * Class:     mist_MistApiBridgeJni
  * Method:    register
@@ -48,7 +54,10 @@ JNIEXPORT void JNICALL Java_mist_MistApiBridgeJni_register (JNIEnv *env, jobject
  * Method:    connected
  * Signature: (Z)V
  */
-JNIEXPORT void JNICALL Java_mist_MistApiBridgeJni_connected(JNIEnv *env, jobject jthis, jboolean connected) {
-    android_wish_printf("MistApiBridgeJni connected: %i", connected);
+JNIEXPORT void JNICALL Java_mist_MistApiBridgeJni_connected(JNIEnv *env, jobject jthis, jboolean new_connected_status) {
+    connected = new_connected_status;
+    android_wish_printf("MistApiBridgeJni connected: %i", new_connected_status);
 }
+
+
 
