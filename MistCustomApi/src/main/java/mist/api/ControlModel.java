@@ -21,7 +21,7 @@ import mist.sandbox.Callback;
  */
 class ControlModel {
     static int request(Peer peer, Control.ModelCb callback) {
-        final String op = "control.model";
+        final String op = "mist.control.model";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);

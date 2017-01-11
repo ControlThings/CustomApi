@@ -30,13 +30,12 @@ class ControlWrite {
     }
 
     private static int send(Peer peer, String epid, Boolean boolState, Integer intState, Float floatState, String stringState, Control.WriteCb callback) {
-        final String op = "control.write";
+        final String op = "mist.control.write";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
-
         writer.writeStartDocument();
         writer.writeBinaryData("luid", new BsonBinary(peer.getLocalId()));
         writer.writeBinaryData("ruid", new BsonBinary(peer.getRemoteId()));

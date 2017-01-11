@@ -24,7 +24,7 @@ import mist.sandbox.Callback;
 class MistListPeers {
 
     static int request(Mist.ListPeersCb callback) {
-        final String op = "mist.listServices";
+        final String op = "listPeers";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);

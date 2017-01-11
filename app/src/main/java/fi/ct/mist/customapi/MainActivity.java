@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        /*
+
                         Mist.signals(new Mist.SignalsCb() {
                             @Override
                             public void cb(String signal) {
-
+                                Log.d("Signals", signal);
                             }
 
                             @Override
@@ -52,61 +52,49 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void end() {
 
-                            }
-                        }); */
-
-                        Identity.list(new Identity.ListCb() {
-                            @Override
-                            public void cb(ArrayList<MistIdentity> identityList) {
-                                for (MistIdentity identity : identityList) {
-                                    Log.d("alias", identity.getAlias());
-                                }
-                            }
-
-                            @Override
-                            public void err(int code, String msg) {
-                                Log.d("Error", "code: " + code + " msg: " + msg);
-                            }
-
-                            @Override
-                            public void end() {
                             }
                         });
-/*
 
-                        Mist.listPeers(new Mist.ListPeersCb() {
-                            @Override
-                            public void cb(ArrayList<Peer> peers) {
-                                for (Peer peer : peers) {
-                                    Control.model(peer, new Control.ModelCb() {
-                                        @Override
-                                        public void cb(JSONObject data) {
-                                            Log.d("Model:", data.toString());
-                                        }
+                        new android.os.Handler().postDelayed(
+                                new Runnable() {
+                                    public void run() {
+                                        Mist.listPeers(new Mist.ListPeersCb() {
+                                            @Override
+                                            public void cb(ArrayList<Peer> peers) {
+                                                for (Peer peer : peers) {
+                                                    Control.model(peer, new Control.ModelCb() {
+                                                        @Override
+                                                        public void cb(JSONObject data) {
+                                                            Log.d("Model:", data.toString());
+                                                        }
 
-                                        @Override
-                                        public void err(int code, String msg) {
+                                                        @Override
+                                                        public void err(int code, String msg) {
 
-                                        }
+                                                        }
 
-                                        @Override
-                                        public void end() {
+                                                        @Override
+                                                        public void end() {
 
-                                        }
-                                    });
-                                }
-                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
 
-                            @Override
-                            public void err(int code, String msg) {
+                                            @Override
+                                            public void err(int code, String msg) {
 
-                            }
+                                            }
 
-                            @Override
-                            public void end() {
+                                            @Override
+                                            public void end() {
 
-                            }
-                        });*/
+                                            }
+                                        });
+                                    }
+                                },
+                                2000);
+
                     }
                 },
                 1000);

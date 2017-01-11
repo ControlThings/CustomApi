@@ -18,7 +18,7 @@ import mist.sandbox.Callback;
 class ControlFollow {
 
     static int request(Peer peer, Control.FollowCb callback) {
-        final String op = "control.follow";
+        final String op = "mist.control.follow";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);

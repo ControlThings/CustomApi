@@ -18,7 +18,7 @@ import mist.sandbox.Callback;
 
 class MistSignals {
     static int request(Mist.SignalsCb callback) {
-        final String op = "mist.signals";
+        final String op = "signals";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
