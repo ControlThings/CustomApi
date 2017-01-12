@@ -4,6 +4,7 @@ import android.os.RemoteException;
 import android.util.Base64;
 import android.util.Log;
 
+import org.bson.BsonArray;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
@@ -52,7 +53,23 @@ class MistListPeers {
                 ArrayList<Peer> peers = new ArrayList<Peer>();
                 BsonDocument bson = new RawBsonDocument(dataBson);
 
-                BsonDocument bsonListServices = bson.getDocument("data");
+                BsonArray bsonListServices = bson.getArray("data");
+                for (BsonValue bsonValue: bsonListServices) {
+                    Peer peer = new Peer();
+                    BsonDocument peerDocument = bsonValue.asDocument();
+                    byte[] luid = peerDocument.get("luid").asBinary().getData();
+                    byte[] ruid = peerDocument.get("ruid").asBinary().getData();
+                    byte[] rhid = peerDocument.get("rhid").asBinary().getData();
+                    byte[] rsid = peerDocument.get("rsid").asBinary().getData();
+                    peer.setLocalId(luid);
+                    peer.setRemoteId(ruid);
+                    peer.setRemoteHostId(rhid);
+                    peer.setRemoteServiceId(rsid);
+                    peer.setProtocol(peerDocument.get("protocol").asString().getValue());
+                    peer.setOnline(peerDocument.get("online").asBoolean().getValue());
+                    peers.add(peer);
+                }
+              /*  BsonDocument bsonListServices = bson.getDocument("data");
                 for (java.util.Map.Entry<String, BsonValue> entry : bsonListServices.entrySet()) {
                     String key = entry.getKey();
                     BsonDocument peerDocument = entry.getValue().asDocument();
@@ -68,7 +85,7 @@ class MistListPeers {
                     peer.setProtocol(peerDocument.get("protocol").asString().getValue());
                     peer.setOnline(peerDocument.get("online").asBoolean().getValue());
                     peers.add(peer);
-                }
+                }*/
                 callback.cb(peers);
             }
 
