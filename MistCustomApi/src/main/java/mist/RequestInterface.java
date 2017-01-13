@@ -1,5 +1,15 @@
 package mist;
 
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.RemoteException;
+import android.util.Log;
+
+import org.bson.BsonDocument;
+import org.bson.BsonValue;
+import org.bson.RawBsonDocument;
+
 import mist.sandbox.Callback;
 
 /**
@@ -28,8 +38,60 @@ public class RequestInterface {
      * @param cb the callback to be invoked when a reply arrives
      * @return the RPC id of the request, or 0 for fail
      */
-    public int wishApiRequest(String op, byte[] argsBson, Callback cb) {
-        return jniWishApiRequest(op, argsBson, cb);
+    public int wishApiRequest(String op, byte[] argsBson, final Callback cb) {
+        Callback intercept = new Callback.Stub() {
+            @Override
+            public void ack(final byte[] data) throws RemoteException {
+
+                Runnable task = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            cb.ack(data);
+                        } catch (RemoteException e) {
+                            Log.d("wishApiRequest", e.toString());
+                        }
+                    }
+                };
+
+                new Handler(Looper.getMainLooper()).post(task);
+            }
+
+            @Override
+            public void sig(final byte[] data) throws RemoteException {
+
+                Runnable task = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            cb.sig(data);
+                        } catch (RemoteException e) {
+                            Log.d("wishApiRequest", e.toString());
+                        }
+                    }
+                };
+
+                new Handler(Looper.getMainLooper()).post(task);
+            }
+
+            @Override
+            public void err(final int code, final String msg) throws RemoteException {
+
+                Runnable task = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            cb.err(code, msg);
+                        } catch (RemoteException e) {
+                            Log.d("wishApiRequest", e.toString());
+                        }
+                    }
+                };
+
+                new Handler(Looper.getMainLooper()).post(task);
+            }
+        };
+        return jniWishApiRequest(op, argsBson, intercept);
     }
 
     /**
@@ -39,8 +101,60 @@ public class RequestInterface {
      * @param cb the callback to be invoked when a reply arrives
      * @return the RPC id of the request, or 0 for fail
      */
-    public int mistApiRequest(String op, byte[] argsBson, Callback cb) {
-        return jniMistApiRequest(op, argsBson, cb);
+    public int mistApiRequest(String op, byte[] argsBson, final Callback cb) {
+        Callback intercept = new Callback.Stub() {
+            @Override
+            public void ack(final byte[] data) throws RemoteException {
+
+                Runnable task = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            cb.ack(data);
+                        } catch (RemoteException e) {
+                            Log.d("wishApiRequest", e.toString());
+                        }
+                    }
+                };
+
+                new Handler(Looper.getMainLooper()).post(task);
+            }
+
+            @Override
+            public void sig(final byte[] data) throws RemoteException {
+
+                Runnable task = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            cb.sig(data);
+                        } catch (RemoteException e) {
+                            Log.d("wishApiRequest", e.toString());
+                        }
+                    }
+                };
+
+                new Handler(Looper.getMainLooper()).post(task);
+            }
+
+            @Override
+            public void err(final int code, final String msg) throws RemoteException {
+
+                Runnable task = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            cb.err(code, msg);
+                        } catch (RemoteException e) {
+                            Log.d("wishApiRequest", e.toString());
+                        }
+                    }
+                };
+
+                new Handler(Looper.getMainLooper()).post(task);
+            }
+        };
+        return jniMistApiRequest(op, argsBson, intercept);
     }
 
     public void mistApiRequestCancel(int id) {
