@@ -1,5 +1,7 @@
 package mist.api;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -52,7 +54,7 @@ class ControlFollow {
                 response(dataBson);
             }
 
-            private void response(byte[] dataBson) {
+            private void response(final byte[] dataBson) {
                 BsonDocument bson = new RawBsonDocument(dataBson);
                 BsonDocument followData = bson.get("data").asDocument();
                 BsonValue followValue = followData.get("data");
