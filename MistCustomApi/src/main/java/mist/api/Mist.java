@@ -25,11 +25,13 @@ public class Mist {
         MistSettings.request(callback);
     }
 
-    public static void login(Context context, LoginCb callback) {
-        MistLogin.request(context, callback);
+    public static void login(LoginCb callback) {
+
+        //MistLogin.request(callback);
+        RequestInterface.getInstance().registerLoginCB(callback);
     }
 
-        public interface SignalsCb extends ErrorCallback {
+    public interface SignalsCb extends ErrorCallback {
         public void cb(String signal);
     }
 
@@ -42,7 +44,7 @@ public class Mist {
     }
 
     public interface LoginCb extends ErrorCallback {
-        public void cb();
+        public void cb(boolean connected);
     }
 
     public static void cancel(int id) {

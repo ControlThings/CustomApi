@@ -96,8 +96,8 @@ class MistApiBridge {
                     BsonDocument bsonDocument = new RawBsonDocument(data);
                     boolean state = bsonDocument.get("data").asBoolean().getValue();
                     if (state) {
-                        jni.connected(true);
                         mBound = true;
+                        jni.connected(true);
                         appToMist.register(new Binder());
                     } else {
                         context.unbindService(mConnection);

@@ -8,6 +8,7 @@
 /* javah -classpath ../../../build/intermediates/classes/debug:/home/jan/Android/Sdk/platforms/android-16/android.jar -o request_interface.h mist.RequestInterface */
 #include "mist_api_bridge_jni.h"
 #include "jni_utils.h"
+#include "mistcustomapi.h"
 
 /* Global reference to the MistApiBridge class will be stored here by register() */
 static jobject mistApiBridge_instance = NULL;
@@ -57,6 +58,33 @@ JNIEXPORT void JNICALL Java_mist_MistApiBridgeJni_register (JNIEnv *env, jobject
 JNIEXPORT void JNICALL Java_mist_MistApiBridgeJni_connected(JNIEnv *env, jobject jthis, jboolean new_connected_status) {
     connected = new_connected_status;
     android_wish_printf("MistApiBridgeJni connected: %i", new_connected_status);
+
+    /* Call the RequestInterfaceInstance.signalConnected */
+    jobject requestInterfaceInstance = get_RequestInterfaceInstance();
+    if (requestInterfaceInstance != NULL) {
+        bool did_attach = false;
+        JNIEnv * my_env = NULL;
+        if (getJNIEnv(javaVM, &my_env, &did_attach)) {
+            android_wish_printf("Method invocation failure, could not get JNI env");
+            return;
+        }
+        jclass requestInterfaceClass = (*my_env)->GetObjectClass(my_env, requestInterfaceInstance);
+        if (requestInterfaceClass == NULL) {
+            android_wish_printf("Cannot get RequestInterface class");
+            return;
+        }
+        jmethodID connectedMethodId = (*my_env)->GetMethodID(my_env, requestInterfaceClass, "signalConnected", "(Z)V");
+        if (connectedMethodId == NULL) {
+            android_wish_printf("Cannot get RequestInterface.signalConnected(boolean) method");
+            return;
+        }
+        (*my_env)->CallVoidMethod(my_env, requestInterfaceInstance, connectedMethodId, new_connected_status);
+        if (did_attach) {
+           detachThread(javaVM);
+        }
+    } else {
+        android_wish_printf("No RequestInterfaceInstance registered to JNI");
+    }
 }
 
 

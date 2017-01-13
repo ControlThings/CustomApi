@@ -31,6 +31,22 @@ JNIEXPORT jint JNICALL Java_mist_RequestInterface_jniMistApiRequest
 JNIEXPORT void JNICALL Java_mist_RequestInterface_jniMistApiRequestCancel
   (JNIEnv *, jobject, jint);
 
+/*
+ * Class:     mist_RequestInterface
+ * Method:    isConnected
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_mist_RequestInterface_isConnected
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     mist_RequestInterface
+ * Method:    registerInstance
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_mist_RequestInterface_registerInstance
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif

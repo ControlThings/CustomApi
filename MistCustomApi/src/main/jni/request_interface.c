@@ -10,6 +10,13 @@
 #include "mistcustomapi.h"
 #include "jni_utils.h"
 
+static JavaVM *javaVM = NULL;
+static jobject requestInterfaceInstance = NULL;
+
+jobject get_RequestInterfaceInstance(void) {
+    return requestInterfaceInstance;
+}
+
 
 /*
  * Class:     mist_RequestInterface
@@ -113,4 +120,29 @@ JNIEXPORT void JNICALL Java_mist_RequestInterface_jniMistApiRequestCancel(JNIEnv
 
     (*env)->CallVoidMethod(env, mistApiBridgeInstance, wishApiRequestMethodId, rpc_id_to_cancel);
     check_and_report_exception(env);
+}
+
+/*
+ * Class:     mist_RequestInterface
+ * Method:    isConnected
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_mist_RequestInterface_isConnected(JNIEnv *env, jobject jthis) {
+    jboolean ret = is_connected() ? JNI_TRUE : JNI_FALSE;
+    return ret;
+}
+
+/*
+ * Class:     mist_RequestInterface
+ * Method:    registerInstance
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_mist_RequestInterface_registerInstance(JNIEnv *env, jobject jthis) {
+    /* Register a refence to the JVM */
+    if ((*env)->GetJavaVM(env,&javaVM) < 0) {
+        android_wish_printf("Failed to GetJavaVM");
+        return;
+    }
+
+    requestInterfaceInstance = (*env)->NewGlobalRef(env, jthis);
 }
