@@ -11,10 +11,18 @@ import android.os.RemoteException;
 import android.util.Base64;
 import android.util.Log;
 
+import org.bson.BsonBinary;
+import org.bson.BsonBinaryWriter;
+import org.bson.BsonDocument;
+import org.bson.BsonWriter;
+import org.bson.RawBsonDocument;
+import org.bson.io.BasicOutputBuffer;
+
 import java.net.ContentHandler;
 import java.util.Random;
 
 import mist.MistApiBridgeJni;
+import mist.api.Mist;
 import mist.sandbox.AppToMist;
 import mist.sandbox.Callback;
 
@@ -61,17 +69,7 @@ class MistApiBridge {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             Log.d(TAG, "onServiceConnected");
             appToMist = AppToMist.Stub.asInterface(iBinder);
-
-           try {
-               if (appToMist.login(new Binder(), getId(), "name")) {
-                   jni.connected(true);
-                   mBound = true;
-               } else {
-                   context.unbindService(mConnection);
-               }
-           } catch (RemoteException e) {
-               Log.d(TAG, "remote exeption in register:");
-           }
+            login();
         }
 
         @Override
@@ -80,6 +78,55 @@ class MistApiBridge {
         }
     };
 
+    private void login() {
+
+        BasicOutputBuffer buffer = new BasicOutputBuffer();
+        BsonWriter writer = new BsonBinaryWriter(buffer);
+        writer.writeStartDocument();
+        writer.writeStartArray("args");
+        writer.writeBinaryData(new BsonBinary(getId()));
+        writer.writeString(context.getPackageName());
+        writer.writeEndArray();
+        writer.writeEndDocument();
+        writer.flush();
+        try {
+            int resId = appToMist.mistApiRequest("login", buffer.toByteArray(), new Callback.Stub() {
+                @Override
+                public void ack(byte[] data) throws RemoteException {
+                    BsonDocument bsonDocument = new RawBsonDocument(data);
+                    boolean state = bsonDocument.get("data").asBoolean().getValue();
+                    if (state) {
+                        jni.connected(true);
+                        mBound = true;
+                        appToMist.register(new Binder());
+                    } else {
+                        context.unbindService(mConnection);
+                    }
+                }
+
+                @Override
+                public void sig(byte[] data) throws RemoteException {
+                }
+
+                @Override
+                public void err(int code, String msg) throws RemoteException {
+                    Log.d(TAG, "login error code: " + code);
+                    context.unbindService(mConnection);
+                }
+            });
+            if (resId == 0) {
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                login();
+                            }
+                        },
+                        1000);
+            }
+        } catch (RemoteException e) {
+            Log.d(TAG, "remote exeption in register:");
+        }
+    }
 
     int wishApiRequest(String op, byte[] data, Callback listener) {
         int id = 0;
