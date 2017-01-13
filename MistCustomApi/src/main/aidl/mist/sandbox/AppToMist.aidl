@@ -12,6 +12,6 @@ int mistApiRequest(in String op, in byte[] data, Callback listener);
 
 void mistApiCancel(in int id);
 
-boolean login(in IBinder client, in byte[] id, in String name);
+boolean register(in IBinder client);
 
 }

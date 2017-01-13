@@ -44,13 +44,30 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MistService.class);
         startService(intent);
         /* Explicit call to ready which will make a request over the custom api binder after a while - FIXME this must be replaced by a proper "ready" signal */
-        new android.os.Handler().postDelayed(
+       /* new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         ready();
                     }
                 },
-                300);
+                300);*/
+
+        Mist.login(new Mist.LoginCb() {
+            @Override
+            public void cb(boolean connected) {
+                ready();
+            }
+
+            @Override
+            public void err(int code, String msg) {
+
+            }
+
+            @Override
+            public void end() {
+
+            }
+        });
 
         peerOnlineState = (TextView) findViewById(R.id.peerOnlineState);
         enabled = (Switch) findViewById(R.id.enabled);

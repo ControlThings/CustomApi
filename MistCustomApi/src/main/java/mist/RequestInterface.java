@@ -1,5 +1,6 @@
 package mist;
 
+
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -10,6 +11,8 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.RawBsonDocument;
 
+import java.util.ArrayList;
+import mist.api.Mist;
 import mist.sandbox.Callback;
 
 /**
@@ -27,7 +30,11 @@ public class RequestInterface {
         return ourInstance;
     }
 
+    private ArrayList<Mist.LoginCb> loginCallbackList;
     private RequestInterface() {
+        /* Register the this class instance down to JNI code so that we can later call signalConnected */
+        registerInstance();
+        loginCallbackList = new ArrayList<>();
     }
 
     /**
@@ -38,7 +45,7 @@ public class RequestInterface {
      * @param cb the callback to be invoked when a reply arrives
      * @return the RPC id of the request, or 0 for fail
      */
-    public int wishApiRequest(String op, byte[] argsBson, final Callback cb) {
+    public synchronized int wishApiRequest(String op, byte[] argsBson, final Callback cb) {
         Callback intercept = new Callback.Stub() {
             @Override
             public void ack(final byte[] data) throws RemoteException {
@@ -92,6 +99,7 @@ public class RequestInterface {
             }
         };
         return jniWishApiRequest(op, argsBson, intercept);
+
     }
 
     /**
@@ -101,7 +109,7 @@ public class RequestInterface {
      * @param cb the callback to be invoked when a reply arrives
      * @return the RPC id of the request, or 0 for fail
      */
-    public int mistApiRequest(String op, byte[] argsBson, final Callback cb) {
+    public synchronized int mistApiRequest(String op, byte[] argsBson, final Callback cb) {
         Callback intercept = new Callback.Stub() {
             @Override
             public void ack(final byte[] data) throws RemoteException {
@@ -157,8 +165,26 @@ public class RequestInterface {
         return jniMistApiRequest(op, argsBson, intercept);
     }
 
-    public void mistApiRequestCancel(int id) {
+    public synchronized void mistApiRequestCancel(int id) {
         jniMistApiRequestCancel(id);
+    }
+
+
+
+    public synchronized void registerLoginCB(final Mist.LoginCb callback) {
+
+        /* First, get connected status */
+        loginCallbackList.add(callback);
+        if (isConnected()) {
+            /* if connected == true, invoke the callback immediately */
+            Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                        callback.cb(true);
+                }
+            };
+            new Handler(Looper.getMainLooper()).post(task);
+        }
     }
 
     /**
@@ -180,5 +206,16 @@ public class RequestInterface {
     native int jniMistApiRequest(String op, byte[] argsBson, Callback cb);
 
     native void jniMistApiRequestCancel(int id);
+
+    native boolean isConnected();
+
+    native void registerInstance();
+
+    /* This method will be called by JNI when MistApiBridgeJni.connected is called */
+    synchronized void signalConnected(boolean connected) {
+        for (Mist.LoginCb loginCb : loginCallbackList) {
+            loginCb.cb(connected);
+        }
+    }
 
 }
