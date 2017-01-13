@@ -1,25 +1,29 @@
 package mist.api;
 
 import android.os.RemoteException;
-import android.util.Log;
 
 import org.bson.BsonArray;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
+import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
+import java.util.ArrayList;
+
+import mist.Peer;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
 /**
- * Created by jeppe on 11/30/16.
+ * Created by jeppe on 11/29/16.
  */
 
-class MistSignals {
-    static int request(Mist.SignalsCb callback) {
-        final String op = "signals";
+class MistSettings {
+
+    static int request(Mist.SettingsCb callback) {
+        final String op = "settings";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
@@ -30,7 +34,7 @@ class MistSignals {
         writer.flush();
 
         int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
-            private Mist.SignalsCb callback;
+            private Mist.SettingsCb callback;
 
             @Override
             public void ack(byte[] dataBson) throws RemoteException {
@@ -44,15 +48,7 @@ class MistSignals {
             }
 
             private void response(byte[] dataBson) {
-                BsonDocument bson = new RawBsonDocument(dataBson);
-                String signalData = "";
-                if (bson.isString("data")){
-                    signalData = bson.getString("data").getValue();
-                } else if (bson.isArray("data")) {
-                    BsonArray bsonArray = bson.getArray("data");
-                    signalData = bsonArray.get(0).asString().getValue();
-                }
-                callback.cb(signalData);
+                callback.cb();
             }
 
             @Override
@@ -61,7 +57,7 @@ class MistSignals {
                 callback.err(code, msg);
             }
 
-            private Callback init(Mist.SignalsCb callback) {
+            private Callback init(Mist.SettingsCb callback) {
                 this.callback = callback;
                 return this;
             }

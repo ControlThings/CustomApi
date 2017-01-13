@@ -19,13 +19,20 @@ public class Mist {
         MistListPeers.request(callback);
     }
 
+    public static void settings(SettingsCb callback) {
+        MistSettings.request(callback);
+    }
+
     public interface SignalsCb extends ErrorCallback {
         public void cb(String signal);
     }
 
-
     public interface ListPeersCb extends ErrorCallback {
         public void cb(ArrayList<Peer> peers);
+    }
+
+    public interface SettingsCb extends ErrorCallback {
+        public void cb();
     }
 
     public static void cancel(int id) {
