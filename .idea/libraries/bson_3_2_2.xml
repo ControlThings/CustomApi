@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="bson-3.2.2">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/MistCustomApi/libs/bson-3.2.2.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

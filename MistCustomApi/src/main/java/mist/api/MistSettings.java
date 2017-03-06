@@ -22,13 +22,14 @@ import mist.sandbox.Callback;
 
 class MistSettings {
 
-    static int request(Mist.SettingsCb callback) {
+    static int request(String hint, Mist.SettingsCb callback) {
         final String op = "settings";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
+        writer.writeString("hint", hint);
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();

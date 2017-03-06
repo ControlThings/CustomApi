@@ -21,8 +21,8 @@ public class Mist {
         MistListPeers.request(callback);
     }
 
-    public static void settings(SettingsCb callback) {
-        MistSettings.request(callback);
+    public static void settings(String hint, SettingsCb callback) {
+        MistSettings.request(hint, callback);
     }
 
     public static void login(LoginCb callback) {

@@ -39,10 +39,12 @@ class MistApiBridge {
     private boolean mBound = false;
     private MistApiBridgeJni jni;
     private AppToMist appToMist;
+    private String appName;
 
-    MistApiBridge(Context context, MistApiBridgeJni jni) {
+    MistApiBridge(Context context, MistApiBridgeJni jni, String appName) {
         this.context = context;
         this.jni = jni;
+        this.appName = appName;
         Intent mistSandbox = new Intent();
         mistSandbox.setComponent(new ComponentName("fi.ct.mist", "fi.ct.mist.sandbox.Sandbox"));
         context.startService(mistSandbox);
@@ -85,7 +87,7 @@ class MistApiBridge {
         writer.writeStartDocument();
         writer.writeStartArray("args");
         writer.writeBinaryData(new BsonBinary(getId()));
-        writer.writeString(context.getPackageName());
+        writer.writeString(appName);
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();

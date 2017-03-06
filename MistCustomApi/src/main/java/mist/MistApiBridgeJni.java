@@ -14,8 +14,8 @@ class MistApiBridgeJni {
     }
 
     MistApiBridge mistApiBridge;
-    MistApiBridgeJni(Context context) {
-        mistApiBridge = new MistApiBridge(context, this);
+    MistApiBridgeJni(Context context, String name) {
+        mistApiBridge = new MistApiBridge(context, this, name);
         register(mistApiBridge);
     }
 
