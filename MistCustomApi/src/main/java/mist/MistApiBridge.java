@@ -40,6 +40,7 @@ class MistApiBridge {
     private MistApiBridgeJni jni;
     private AppToMist appToMist;
     private String appName;
+    private boolean logined;
 
     MistApiBridge(Context context, MistApiBridgeJni jni, String appName) {
         this.context = context;
@@ -69,6 +70,7 @@ class MistApiBridge {
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mBound = true;
             Log.d(TAG, "onServiceConnected");
             appToMist = AppToMist.Stub.asInterface(iBinder);
             login();
@@ -98,7 +100,7 @@ class MistApiBridge {
                     BsonDocument bsonDocument = new RawBsonDocument(data);
                     boolean state = bsonDocument.get("data").asBoolean().getValue();
                     if (state) {
-                        mBound = true;
+                        logined = true;
                         jni.connected(true);
                         appToMist.register(new Binder());
                     } else {
@@ -132,8 +134,8 @@ class MistApiBridge {
 
     int wishApiRequest(String op, byte[] data, Callback listener) {
         int id = 0;
-        if (!mBound) {
-            Log.v(TAG, "Error: not bound");
+        if (!logined) {
+            Log.v(TAG, "Error: not logined");
         } else {
             try {
                 id = appToMist.wishApiRequest(op, data, listener);
@@ -146,8 +148,8 @@ class MistApiBridge {
 
     int mistApiRequest(String op, byte[] data, Callback listener) {
         int id = 0;
-        if (!mBound) {
-            Log.v(TAG, "Error: not bound");
+        if (!logined) {
+            Log.v(TAG, "Error: not logined");
         } else {
             try {
                 id = appToMist.mistApiRequest(op, data, listener);
@@ -159,8 +161,8 @@ class MistApiBridge {
     }
 
     void mistApiCancel(int id) {
-        if (!mBound) {
-            Log.v(TAG, "Error: not bound");
+        if (!logined) {
+            Log.v(TAG, "Error: not logined");
         } else {
             try {
                 appToMist.mistApiCancel(id);
@@ -174,6 +176,8 @@ class MistApiBridge {
     void unBind() {
         if (mBound) {
             mBound = false;
+            logined = false;
+            Log.d(TAG, "UNBIND");
             context.unbindService(mConnection);
         } else {
             Log.d(TAG, "Not bound when unbinding");

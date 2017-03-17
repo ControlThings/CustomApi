@@ -1,7 +1,9 @@
 package mist;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
@@ -44,17 +46,50 @@ public class MistService extends Service {
 
         mistApiBridgeJni = new MistApiBridgeJni(this.getBaseContext(), name);
 
-        return Service.START_STICKY;
+        return Service.START_NOT_STICKY;
     }
+
+
+
+    @Override
+    public void onCreate() {
+        Log.d(TAG, "onCreate");
+        super.onCreate();
+
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.d(TAG, "onTaskRemoved");
+        stopSelf();
+        super.onTaskRemoved(rootIntent);
+
+    }
+
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(TAG, "onBind");
         return null;
     }
 
     @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TAG, "onUnbind");
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        Log.d(TAG, "onRebind");
+        super.onRebind(intent);
+
+    }
+
+    @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy");
         mistApiBridgeJni.disconnect();
     }
 }
