@@ -1,9 +1,12 @@
 package fi.ct.mist.customapi;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -17,6 +20,7 @@ import org.bson.io.BasicOutputBuffer;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import mist.Peer;
 import mist.RequestInterface;
@@ -36,22 +40,29 @@ public class MainActivity extends AppCompatActivity {
     private TextView lat;
     private TextView accuracy;
 
+    // Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+/*
+        SharedPreferences preferences = getBaseContext().getSharedPreferences("test", Context.MODE_PRIVATE);
+        String idString = preferences.getString("id", "empty");
+
+        Log.d("TEST", idString);
+
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("id", "mainActivity");
+        editor.commit();
+*/
+
         Intent intent = new Intent(this, MistService.class);
         intent.putExtra("name", "TestApp");
         startService(intent);
-        /* Explicit call to ready which will make a request over the custom api binder after a while - FIXME this must be replaced by a proper "ready" signal */
-       /* new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        ready();
-                    }
-                },
-                300);*/
+
 
         Mist.login(new Mist.LoginCb() {
             @Override
@@ -69,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+    }
+/*
         peerOnlineState = (TextView) findViewById(R.id.peerOnlineState);
         enabled = (Switch) findViewById(R.id.enabled);
         counter = (TextView) findViewById(R.id.counter);
@@ -139,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Toast.makeText(getApplicationContext(), "Writing enabled to "+b, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Writing enabled to " + b, Toast.LENGTH_SHORT).show();
                 Control.write(peer, "enabled", b, new Control.WriteCb() {
                     @Override
                     public void cb() {
@@ -172,11 +184,26 @@ public class MainActivity extends AppCompatActivity {
                 },
                 10000);
     }
-
+*/
     private void ready() {
 
+        Mist.settings(Mist.Settings.Hint.addPeer, new Mist.SettingsCb() {
+            @Override
+            public void cb() {
 
+            }
 
+            @Override
+            public void err(int code, String msg) {
+
+            }
+
+            @Override
+            public void end() {
+
+            }
+        });
+/*
         Mist.signals(new Mist.SignalsCb() {
             @Override
             public void cb(String signal) {
@@ -307,14 +334,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+*/
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cancel();
+        Log.d("Mainactivity", "onDestroy");
+
+        //cancel();
     }
-}
+    }
 
 
