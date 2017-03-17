@@ -21,7 +21,7 @@ public class Mist {
         MistListPeers.request(callback);
     }
 
-    public static void settings(String hint, SettingsCb callback) {
+    public static void settings(Settings.Hint hint, SettingsCb callback) {
         MistSettings.request(hint, callback);
     }
 
@@ -50,5 +50,24 @@ public class Mist {
     public static void cancel(int id) {
         RequestInterface.getInstance().mistApiRequestCancel(id);
     }
+
+    public static class Settings{
+        public enum Hint {
+            commission("commission"),
+            addPeer("addPeer");
+
+            private String type;
+
+            private Hint(String type) {
+                this.type = type;
+            }
+
+            public String getType() {
+                return type;
+            }
+        }
+    }
+
+
 }
 
