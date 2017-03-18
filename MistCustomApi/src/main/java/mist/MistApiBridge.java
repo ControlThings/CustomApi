@@ -19,6 +19,7 @@ import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import java.net.ContentHandler;
+import java.util.LinkedList;
 import java.util.Random;
 
 import mist.MistApiBridgeJni;
@@ -42,10 +43,32 @@ class MistApiBridge {
     private String appName;
     private boolean logined;
 
+    private class DeferredCustomApiRequest {
+        private String op;
+        private byte[] data;
+        Callback cb;
+
+        DeferredCustomApiRequest(String op, byte[] data, Callback cb) {
+            this.op = op;
+            this.data = data;
+            this.cb = cb;
+        }
+    }
+
+    private LinkedList<DeferredCustomApiRequest> deferredWishRequests;
+    private LinkedList<DeferredCustomApiRequest> deferredMistRequests;
+
+
     MistApiBridge(Context context, MistApiBridgeJni jni, String appName) {
+        deferredWishRequests = new LinkedList<>();
+        deferredMistRequests = new LinkedList<>();
         this.context = context;
         this.jni = jni;
         this.appName = appName;
+        startSandboxService();
+    }
+
+    private void startSandboxService() {
         Intent mistSandbox = new Intent();
         mistSandbox.setComponent(new ComponentName("fi.ct.mist", "fi.ct.mist.sandbox.Sandbox"));
         context.startService(mistSandbox);
@@ -79,6 +102,7 @@ class MistApiBridge {
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             mBound = false;
+            logined = false;
         }
     };
 
@@ -103,6 +127,14 @@ class MistApiBridge {
                         logined = true;
                         jni.connected(true);
                         appToMist.register(new Binder());
+
+                        for (DeferredCustomApiRequest req : deferredWishRequests) {
+                            appToMist.wishApiRequest(req.op, req.data, req.cb);
+                        }
+
+                        for (DeferredCustomApiRequest req: deferredMistRequests) {
+                            appToMist.mistApiRequest(req.op, req.data, req.cb);
+                        }
                     } else {
                         context.unbindService(mConnection);
                     }
@@ -129,18 +161,22 @@ class MistApiBridge {
             }
         } catch (RemoteException e) {
             Log.d(TAG, "remote exeption in register:");
+
         }
     }
 
     int wishApiRequest(String op, byte[] data, Callback listener) {
         int id = 0;
         if (!logined) {
-            Log.v(TAG, "Error: not logined");
+            Log.v(TAG, "Error: not logined; adding to deferred wish req list ");
+            deferredWishRequests.add(new DeferredCustomApiRequest(op, data, listener));
         } else {
             try {
                 id = appToMist.wishApiRequest(op, data, listener);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException occured while performing wishApiRequest: " + e);
+                deferredWishRequests.add(new DeferredCustomApiRequest(op, data, listener));
+                startSandboxService();
             }
         }
         return id;
@@ -149,12 +185,15 @@ class MistApiBridge {
     int mistApiRequest(String op, byte[] data, Callback listener) {
         int id = 0;
         if (!logined) {
-            Log.v(TAG, "Error: not logined");
+            Log.v(TAG, "Error: not logined; adding to deferred mist req list");
+            deferredMistRequests.add(new DeferredCustomApiRequest(op, data, listener));
         } else {
             try {
                 id = appToMist.mistApiRequest(op, data, listener);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException occured while performing mistApiRequest " + e);
+                deferredMistRequests.add(new DeferredCustomApiRequest(op, data, listener));
+                startSandboxService();
             }
         }
         return id;
@@ -168,6 +207,7 @@ class MistApiBridge {
                 appToMist.mistApiCancel(id);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException occured while performing mistApiCancel  " + e);
+                startSandboxService();
             }
         }
     }
