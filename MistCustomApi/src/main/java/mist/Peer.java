@@ -1,6 +1,7 @@
 package mist;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Created by jeppe on 11/16/16.
@@ -84,5 +85,21 @@ public class Peer implements Serializable {
         s += " protocol: " + protocol;
         s += online ? " online" : " offline";
         return s;
+    }
+
+    /**
+     * Compare this peer to an other
+     * @param peer the peer to compare
+     * @return true, if the localID, remoteId, remoteHostId and remoteServiceIds, and the protocols match.
+     */
+    public boolean equals(Peer peer) {
+        if (Arrays.equals(peer.getLocalId(), this.localId) &&
+                Arrays.equals(peer.getRemoteId(), this.remoteId) &&
+                Arrays.equals(peer.getRemoteHostId(), this.remoteHostId) &&
+                Arrays.equals(peer.getRemoteServiceId(), this.remoteServiceId) &&
+                peer.getProtocol().equals(this.protocol)) {
+            return true;
+        }
+        return false;
     }
 }
