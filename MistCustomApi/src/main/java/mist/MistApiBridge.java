@@ -55,13 +55,7 @@ class MistApiBridge {
         }
     }
 
-    private LinkedList<DeferredCustomApiRequest> deferredWishRequests;
-    private LinkedList<DeferredCustomApiRequest> deferredMistRequests;
-
-
     MistApiBridge(Context context, MistApiBridgeJni jni, String appName) {
-        deferredWishRequests = new LinkedList<>();
-        deferredMistRequests = new LinkedList<>();
         this.context = context;
         this.jni = jni;
         this.appName = appName;
@@ -127,14 +121,6 @@ class MistApiBridge {
                         logined = true;
                         jni.connected(true);
                         appToMist.register(new Binder());
-
-                        for (DeferredCustomApiRequest req : deferredWishRequests) {
-                            appToMist.wishApiRequest(req.op, req.data, req.cb);
-                        }
-
-                        for (DeferredCustomApiRequest req: deferredMistRequests) {
-                            appToMist.mistApiRequest(req.op, req.data, req.cb);
-                        }
                     } else {
                         context.unbindService(mConnection);
                     }
@@ -165,34 +151,44 @@ class MistApiBridge {
         }
     }
 
+    /**
+     *
+     * @param op
+     * @param data
+     * @param listener
+     * @return the RPC id of the request, or 0 for error (request is not buffered in case of error)
+     */
     int wishApiRequest(String op, byte[] data, Callback listener) {
         int id = 0;
         if (!logined) {
-            Log.v(TAG, "Error: not logined; adding to deferred wish req list ");
-            deferredWishRequests.add(new DeferredCustomApiRequest(op, data, listener));
+            Log.v(TAG, "Error: not logined");
         } else {
             try {
                 id = appToMist.wishApiRequest(op, data, listener);
             } catch (RemoteException e) {
-                Log.e(TAG, "RemoteException occured while performing wishApiRequest: " + e);
-                deferredWishRequests.add(new DeferredCustomApiRequest(op, data, listener));
+                Log.e(TAG, "RemoteException occured while performing wishApiRequest, restarting service: " + e);
                 startSandboxService();
             }
         }
         return id;
     }
 
+    /**
+     *
+     * @param op
+     * @param data
+     * @param listener
+     * @return the RPC id of the request, which can be used for mistApiCancel(), or 0 for error (request is not buffered in case of error)
+     */
     int mistApiRequest(String op, byte[] data, Callback listener) {
         int id = 0;
         if (!logined) {
-            Log.v(TAG, "Error: not logined; adding to deferred mist req list");
-            deferredMistRequests.add(new DeferredCustomApiRequest(op, data, listener));
+            Log.v(TAG, "Error: not logined");
         } else {
             try {
                 id = appToMist.mistApiRequest(op, data, listener);
             } catch (RemoteException e) {
-                Log.e(TAG, "RemoteException occured while performing mistApiRequest " + e);
-                deferredMistRequests.add(new DeferredCustomApiRequest(op, data, listener));
+                Log.e(TAG, "RemoteException occured while performing mistApiRequest, restarting service: " + e);
                 startSandboxService();
             }
         }
