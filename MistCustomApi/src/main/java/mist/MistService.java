@@ -90,6 +90,9 @@ public class MistService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-        mistApiBridgeJni.disconnect();
+        if (mistApiBridgeJni != null) {
+            mistApiBridgeJni.disconnect();
+        }
+
     }
 }
