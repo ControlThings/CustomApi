@@ -6,12 +6,10 @@ import mist.sandbox.Callback;
 
 interface AppToMist {
 
-int wishApiRequest(in String op, in byte[] data, Callback listener);
+    int wishApiRequest(in IBinder binder, in String op, in byte[] data, Callback listener);
 
-int mistApiRequest(in String op, in byte[] data, Callback listener);
+    int mistApiRequest(in IBinder binder, in String op, in byte[] data, Callback listener);
 
-void mistApiCancel(in int id);
-
-boolean register(in IBinder client);
+    void mistApiCancel(in IBinder binder, in int id);
 
 }

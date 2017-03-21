@@ -43,6 +43,8 @@ class MistApiBridge {
     private String appName;
     private boolean logined;
 
+    Binder binder = new Binder();
+
     private class DeferredCustomApiRequest {
         private String op;
         private byte[] data;
@@ -112,7 +114,7 @@ class MistApiBridge {
         writer.writeEndDocument();
         writer.flush();
         try {
-            int resId = appToMist.mistApiRequest("login", buffer.toByteArray(), new Callback.Stub() {
+            int resId = appToMist.mistApiRequest(binder, "login", buffer.toByteArray(), new Callback.Stub() {
                 @Override
                 public void ack(byte[] data) throws RemoteException {
                     BsonDocument bsonDocument = new RawBsonDocument(data);
@@ -120,7 +122,7 @@ class MistApiBridge {
                     if (state) {
                         logined = true;
                         jni.connected(true);
-                        appToMist.register(new Binder());
+                        //appToMist.register(binder);
                     } else {
                         context.unbindService(mConnection);
                     }
@@ -146,8 +148,11 @@ class MistApiBridge {
                         1000);
             }
         } catch (RemoteException e) {
-            Log.d(TAG, "remote exeption in register:");
-
+            Log.d(TAG, "remote exeption in register.");
+        } catch (NullPointerException e) {
+            Log.d(TAG, "appToMist.mistApiRequest possibly not compatible!");
+        } catch (Exception e) {
+            Log.d(TAG, "appToMist.mistApiRequest failed to login in an unknown way!");
         }
     }
 
@@ -164,10 +169,12 @@ class MistApiBridge {
             Log.v(TAG, "Error: not logined");
         } else {
             try {
-                id = appToMist.wishApiRequest(op, data, listener);
+                id = appToMist.wishApiRequest(binder, op, data, listener);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException occured while performing wishApiRequest, restarting service: " + e);
                 startSandboxService();
+            } catch (Exception e) {
+                Log.d(TAG, "appToMist.wishApiRequest failed in an unhandled way!");
             }
         }
         return id;
@@ -186,10 +193,12 @@ class MistApiBridge {
             Log.v(TAG, "Error: not logined");
         } else {
             try {
-                id = appToMist.mistApiRequest(op, data, listener);
+                id = appToMist.mistApiRequest(binder, op, data, listener);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException occured while performing mistApiRequest, restarting service: " + e);
                 startSandboxService();
+            } catch (Exception e) {
+                Log.d(TAG, "appToMist.mistApiRequest failed in an unhandled way!");
             }
         }
         return id;
@@ -200,10 +209,12 @@ class MistApiBridge {
             Log.v(TAG, "Error: not logined");
         } else {
             try {
-                appToMist.mistApiCancel(id);
+                appToMist.mistApiCancel(binder, id);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException occured while performing mistApiCancel  " + e);
                 startSandboxService();
+            } catch (Exception e) {
+                Log.d(TAG, "appToMist.mistApiCancel failed in an unhandled way!");
             }
         }
     }
