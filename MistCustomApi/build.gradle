@@ -28,8 +28,8 @@ def getGitClean = { ->
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     def versionPropsFile = file('version.properties')
     if (versionPropsFile.canRead()) {
@@ -41,7 +41,7 @@ android {
 
         defaultConfig {
             minSdkVersion 16
-            targetSdkVersion 23
+            targetSdkVersion 25
             versionCode version_code
             versionName version_name
 
