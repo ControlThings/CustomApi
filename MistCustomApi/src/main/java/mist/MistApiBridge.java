@@ -139,13 +139,7 @@ class MistApiBridge {
                 }
             });
             if (resId == 0) {
-                new android.os.Handler().postDelayed(
-                        new Runnable() {
-                            public void run() {
-                                login();
-                            }
-                        },
-                        1000);
+                startSandboxService();
             }
         } catch (RemoteException e) {
             Log.d(TAG, "remote exeption in register.");
@@ -166,7 +160,7 @@ class MistApiBridge {
     int wishApiRequest(String op, byte[] data, Callback listener) {
         int id = 0;
         if (!logined) {
-            Log.v(TAG, "Error: not logined");
+            Log.v(TAG, "Error: not logined.. (w)");
         } else {
             try {
                 id = appToMist.wishApiRequest(binder, op, data, listener);
@@ -190,7 +184,7 @@ class MistApiBridge {
     int mistApiRequest(String op, byte[] data, Callback listener) {
         int id = 0;
         if (!logined) {
-            Log.v(TAG, "Error: not logined");
+            Log.v(TAG, "Error: not logined..");
         } else {
             try {
                 id = appToMist.mistApiRequest(binder, op, data, listener);
