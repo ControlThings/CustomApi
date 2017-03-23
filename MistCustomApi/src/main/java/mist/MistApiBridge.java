@@ -67,7 +67,7 @@ class MistApiBridge {
     private void startSandboxService() {
         Intent mistSandbox = new Intent();
         mistSandbox.setComponent(new ComponentName("fi.ct.mist", "fi.ct.mist.sandbox.Sandbox"));
-       // context.startService(mistSandbox);
+        context.startService(mistSandbox);
         context.bindService(mistSandbox, mConnection, 0);
     }
 
