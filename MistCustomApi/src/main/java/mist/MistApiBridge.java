@@ -41,7 +41,7 @@ class MistApiBridge {
     private MistApiBridgeJni jni;
     private AppToMist appToMist;
     private String appName;
-    private boolean logined;
+    private boolean logined = false;
 
     Binder binder = new Binder();
 
