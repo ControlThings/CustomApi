@@ -97,8 +97,11 @@ class MistApiBridge {
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
+            // We never get here for some reason
+            Log.d(TAG, "onServiceDisconnected");
             mBound = false;
             logined = false;
+            jni.disconnect();
         }
     };
 
@@ -119,6 +122,7 @@ class MistApiBridge {
                 public void ack(byte[] data) throws RemoteException {
                     BsonDocument bsonDocument = new RawBsonDocument(data);
                     boolean state = bsonDocument.get("data").asBoolean().getValue();
+
                     if (state) {
                         logined = true;
                         jni.connected(true);
@@ -215,14 +219,14 @@ class MistApiBridge {
 
 
     void unBind() {
+        Log.d(TAG, "UNBIND");
+        logined = false;
+
         if (mBound) {
             mBound = false;
-            logined = false;
-            Log.d(TAG, "UNBIND");
             context.unbindService(mConnection);
         } else {
             Log.d(TAG, "Not bound when unbinding");
         }
     }
-
 }

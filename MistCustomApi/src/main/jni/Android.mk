@@ -9,7 +9,8 @@ LOCAL_MODULE    := mistcustomapi
 LOCAL_SRC_FILES := jni_utils.c mist_api_bridge_jni.c request_interface.c
 LOCAL_C_INCLUDES := 
 LOCAL_LDLIBS := -llog
-LOCAL_CFLAGS := -O2 -Wall -Wno-pointer-sign -Werror -Wno-unused-variable -Wno-unused-function -fvisibility=hidden
+#LOCAL_CFLAGS := -O2 -Wall -Wno-pointer-sign -Werror -Wno-unused-variable -Wno-unused-function -fvisibility=hidden
+LOCAL_CFLAGS := -g -O0 -Wall -Wno-pointer-sign -Werror -Wno-unused-variable -Wno-unused-function -fvisibility=hidden
 
 #Put each function in own section, so that linker can discard unused code
 LOCAL_CFLAGS += -ffunction-sections -fdata-sections 

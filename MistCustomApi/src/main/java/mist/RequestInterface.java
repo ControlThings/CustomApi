@@ -30,11 +30,11 @@ public class RequestInterface {
         return ourInstance;
     }
 
-    private ArrayList<Mist.LoginCb> loginCallbackList;
+    private Mist.LoginCb loginCb;
     private RequestInterface() {
         /* Register the this class instance down to JNI code so that we can later call signalConnected */
         registerInstance();
-        loginCallbackList = new ArrayList<>();
+        loginCb = null;
     }
 
     /**
@@ -172,9 +172,6 @@ public class RequestInterface {
 
 
     public synchronized void registerLoginCB(final Mist.LoginCb callback) {
-
-        /* First, get connected status */
-        loginCallbackList.add(callback);
         if (isConnected()) {
             /* if connected == true, invoke the callback immediately */
             Runnable task = new Runnable() {
@@ -184,6 +181,8 @@ public class RequestInterface {
                 }
             };
             new Handler(Looper.getMainLooper()).post(task);
+        } else {
+            loginCb = callback;
         }
     }
 
@@ -213,8 +212,9 @@ public class RequestInterface {
 
     /* This method will be called by JNI when MistApiBridgeJni.connected is called */
     synchronized void signalConnected(boolean connected) {
-        for (Mist.LoginCb loginCb : loginCallbackList) {
+        if (loginCb != null) {
             loginCb.cb(connected);
+            loginCb = null;
         }
     }
 
