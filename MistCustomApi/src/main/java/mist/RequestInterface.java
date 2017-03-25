@@ -172,18 +172,7 @@ public class RequestInterface {
 
 
     public synchronized void registerLoginCB(final Mist.LoginCb callback) {
-        if (isConnected()) {
-            /* if connected == true, invoke the callback immediately */
-            Runnable task = new Runnable() {
-                @Override
-                public void run() {
-                        callback.cb(true);
-                }
-            };
-            new Handler(Looper.getMainLooper()).post(task);
-        } else {
-            loginCb = callback;
-        }
+        loginCb = callback;
     }
 
     /**
@@ -214,7 +203,9 @@ public class RequestInterface {
     synchronized void signalConnected(boolean connected) {
         if (loginCb != null) {
             loginCb.cb(connected);
-            loginCb = null;
+            if (connected) {
+                loginCb = null;
+            }
         }
     }
 
