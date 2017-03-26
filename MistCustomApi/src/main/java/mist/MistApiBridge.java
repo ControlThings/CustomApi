@@ -18,12 +18,8 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import java.net.ContentHandler;
-import java.util.LinkedList;
 import java.util.Random;
 
-import mist.MistApiBridgeJni;
-import mist.api.Mist;
 import mist.sandbox.AppToMist;
 import mist.sandbox.Callback;
 
@@ -32,7 +28,7 @@ import mist.sandbox.Callback;
  */
 
 class MistApiBridge {
-    private final String TAG = "Mist Api Bridge";
+    private final String TAG = "MistApiBridge";
 
     private final static String pref = "mist_pref";
 
@@ -43,19 +39,7 @@ class MistApiBridge {
     private String appName;
     private boolean logined = false;
 
-    Binder binder = new Binder();
-
-    private class DeferredCustomApiRequest {
-        private String op;
-        private byte[] data;
-        Callback cb;
-
-        DeferredCustomApiRequest(String op, byte[] data, Callback cb) {
-            this.op = op;
-            this.data = data;
-            this.cb = cb;
-        }
-    }
+    private Binder binder = new Binder();
 
     MistApiBridge(Context context, MistApiBridgeJni jni, String appName) {
         this.context = context;
@@ -116,10 +100,14 @@ class MistApiBridge {
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();
+
+        Log.d(TAG, "login a");
+
         try {
             int resId = appToMist.mistApiRequest(binder, "login", buffer.toByteArray(), new Callback.Stub() {
                 @Override
                 public void ack(byte[] data) throws RemoteException {
+                    Log.d(TAG, "mistApiRequest: login acked");
                     BsonDocument bsonDocument = new RawBsonDocument(data);
                     boolean state = bsonDocument.get("data").asBoolean().getValue();
 
@@ -156,9 +144,9 @@ class MistApiBridge {
 
     /**
      *
-     * @param op
-     * @param data
-     * @param listener
+     * @param op RPC operator string
+     * @param data RPC argument BSON
+     * @param listener Callback function for response
      * @return the RPC id of the request, or 0 for error (request is not buffered in case of error)
      */
     int wishApiRequest(String op, byte[] data, Callback listener) {
@@ -180,9 +168,9 @@ class MistApiBridge {
 
     /**
      *
-     * @param op
-     * @param data
-     * @param listener
+     * @param op RPC operator string
+     * @param data RPC argument BSON
+     * @param listener Callback function for response
      * @return the RPC id of the request, which can be used for mistApiCancel(), or 0 for error (request is not buffered in case of error)
      */
     int mistApiRequest(String op, byte[] data, Callback listener) {

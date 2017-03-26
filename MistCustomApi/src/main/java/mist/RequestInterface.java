@@ -201,6 +201,7 @@ public class RequestInterface {
 
     /* This method will be called by JNI when MistApiBridgeJni.connected is called */
     synchronized void signalConnected(boolean connected) {
+        Log.d("RequestInterface", "signalConnected: "+ connected);
         if (loginCb != null) {
             loginCb.cb(connected);
             if (connected) {

@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CustomApi.iml" filepath="$PROJECT_DIR$/CustomApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/MistCustomApi/MistCustomApi.iml" filepath="$PROJECT_DIR$/MistCustomApi/MistCustomApi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MistCustomApi/MistCustomApi.iml" filepath="$PROJECT_DIR$/MistCustomApi/MistCustomApi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
