@@ -169,10 +169,11 @@ public class RequestInterface {
         jniMistApiRequestCancel(id);
     }
 
-
-
     public synchronized void registerLoginCB(final Mist.LoginCb callback) {
         loginCb = callback;
+        if (isConnected()) {
+            signalConnected(true);
+        }
     }
 
     /**
