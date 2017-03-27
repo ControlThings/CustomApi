@@ -95,6 +95,6 @@ public class MistService extends Service {
         if (mistApiBridgeJni != null) {
             mistApiBridgeJni.disconnect();
         }
-
+        started = false;
     }
 }

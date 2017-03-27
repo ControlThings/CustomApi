@@ -26,8 +26,6 @@ public class Mist {
     }
 
     public static void login(LoginCb callback) {
-
-        //MistLogin.request(callback);
         RequestInterface.getInstance().registerLoginCB(callback);
     }
 
