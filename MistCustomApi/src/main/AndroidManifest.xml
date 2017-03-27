@@ -6,7 +6,7 @@
         <service
             android:name="mist.MistService"
             android:exported="false"
-            android:stopWithTask="false"/>
+            android:stopWithTask="true"/>
 
     </application>
 

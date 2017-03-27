@@ -21,34 +21,36 @@ public class MistService extends Service {
     private final String TAG = "Mist Service";
 
 
-
     private Intent mistSandbox;
 
 
     private MistApiBridgeJni mistApiBridgeJni;
+    private boolean started;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
-        String name;
-        if (intent.hasExtra("name")) {
-            name = intent.getStringExtra("name");
-        } else {
-            final PackageManager pm = getApplicationContext().getPackageManager();
-            ApplicationInfo ai;
-            try {
-                ai = pm.getApplicationInfo( this.getPackageName(), 0);
-            } catch (final PackageManager.NameNotFoundException e) {
-                ai = null;
+
+        if (!started) {
+            String name;
+            if (intent.hasExtra("name")) {
+                name = intent.getStringExtra("name");
+            } else {
+                final PackageManager pm = getApplicationContext().getPackageManager();
+                ApplicationInfo ai;
+                try {
+                    ai = pm.getApplicationInfo(this.getPackageName(), 0);
+                } catch (final PackageManager.NameNotFoundException e) {
+                    ai = null;
+                }
+                name = (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
             }
-            name = (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
+
+            mistApiBridgeJni = new MistApiBridgeJni(this.getBaseContext(), name);
+            started = true;
         }
-
-        mistApiBridgeJni = new MistApiBridgeJni(this.getBaseContext(), name);
-
         return Service.START_NOT_STICKY;
     }
-
 
 
     @Override
