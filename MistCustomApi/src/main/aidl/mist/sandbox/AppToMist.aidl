@@ -12,4 +12,5 @@ interface AppToMist {
 
     void mistApiCancel(in IBinder binder, in int id);
 
+    void kill(in IBinder binder);
 }

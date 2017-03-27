@@ -23,7 +23,7 @@ class MistApiBridgeJni {
     native void connected(boolean connected);
 
     void disconnect() {
-        connected(false);
+        //connected(false);
         mistApiBridge.unBind();
     }
 }

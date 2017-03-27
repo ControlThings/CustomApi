@@ -39,13 +39,14 @@ class MistApiBridge {
     private String appName;
     private boolean logined = false;
 
-    private Binder binder = new Binder();
+    private Binder binder;
 
     MistApiBridge(Context context, MistApiBridgeJni jni, String appName) {
         this.context = context;
         this.jni = jni;
         this.appName = appName;
         startSandboxService();
+        binder = new Binder();
     }
 
     private void startSandboxService() {
@@ -85,7 +86,7 @@ class MistApiBridge {
             Log.d(TAG, "onServiceDisconnected");
             mBound = false;
             logined = false;
-            jni.disconnect();
+            jni.connected(false);
         }
     };
 
@@ -143,9 +144,8 @@ class MistApiBridge {
     }
 
     /**
-     *
-     * @param op RPC operator string
-     * @param data RPC argument BSON
+     * @param op       RPC operator string
+     * @param data     RPC argument BSON
      * @param listener Callback function for response
      * @return the RPC id of the request, or 0 for error (request is not buffered in case of error)
      */
@@ -167,9 +167,8 @@ class MistApiBridge {
     }
 
     /**
-     *
-     * @param op RPC operator string
-     * @param data RPC argument BSON
+     * @param op       RPC operator string
+     * @param data     RPC argument BSON
      * @param listener Callback function for response
      * @return the RPC id of the request, which can be used for mistApiCancel(), or 0 for error (request is not buffered in case of error)
      */
@@ -208,10 +207,21 @@ class MistApiBridge {
 
     void unBind() {
         Log.d(TAG, "UNBIND");
-        logined = false;
+        jni.connected(false);
 
+        if (logined) {
+            try {
+                appToMist.kill(binder);
+            } catch (RemoteException e) {
+                Log.e(TAG, "RemoteException occured while performing kill  " + e);
+                startSandboxService();
+            } catch (Exception e) {
+                Log.d(TAG, "appToMist.kill failed in an unhandled way!");
+            }
+
+        }
         if (mBound) {
-            mBound = false;
+            //  mBound = false;
             context.unbindService(mConnection);
         } else {
             Log.d(TAG, "Not bound when unbinding");
