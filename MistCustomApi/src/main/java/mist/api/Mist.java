@@ -39,7 +39,7 @@ public class Mist {
     }
 
     public abstract static class SettingsCb extends Callback {
-        public abstract void cb();
+        public void cb() {};
     }
 
     public abstract static class LoginCb extends Callback {
