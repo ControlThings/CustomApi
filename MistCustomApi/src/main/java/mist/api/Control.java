@@ -35,10 +35,10 @@ public class Control {
     }
 
     public abstract static class FollowCb extends Callback {
-        public abstract void cbBool(String epid, boolean value);
-        public abstract void cbInt(String epid, int value);
-        public abstract void cbFloat(String epid, float value);
-        public abstract void cbString(String epid, String value);
+        public void cbBool(String epid, boolean value) {};
+        public void cbInt(String epid, int value) {};
+        public void cbFloat(String epid, float value) {};
+        public void cbString(String epid, String value) {};
     }
 
     public abstract static class ModelCb extends Callback {
