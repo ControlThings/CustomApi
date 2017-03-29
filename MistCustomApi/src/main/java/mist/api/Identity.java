@@ -14,8 +14,8 @@ public class Identity {
         IdentityList.request(callback);
     }
 
-    public interface ListCb extends ErrorCallback {
-        public void cb(ArrayList<MistIdentity> identityList);
+    public abstract static class ListCb extends Callback {
+        public abstract void cb(ArrayList<MistIdentity> identityList);
     }
 
 

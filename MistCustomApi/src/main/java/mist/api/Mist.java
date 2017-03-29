@@ -1,6 +1,7 @@
 package mist.api;
 
 import android.content.Context;
+import android.support.annotation.Keep;
 
 import java.util.ArrayList;
 
@@ -29,20 +30,20 @@ public class Mist {
         RequestInterface.getInstance().registerLoginCB(callback);
     }
 
-    public interface SignalsCb extends ErrorCallback {
-        public void cb(String signal);
+    public abstract static class SignalsCb extends Callback {
+        public abstract void cb(String signal);
     }
 
-    public interface ListPeersCb extends ErrorCallback {
-        public void cb(ArrayList<Peer> peers);
+    public abstract static class ListPeersCb extends Callback {
+        public abstract void cb(ArrayList<Peer> peers);
     }
 
-    public interface SettingsCb extends ErrorCallback {
-        public void cb();
+    public abstract static class SettingsCb extends Callback {
+        public abstract void cb();
     }
 
-    public interface LoginCb extends ErrorCallback {
-        public void cb(boolean connected);
+    public abstract static class LoginCb extends Callback {
+        public abstract void cb(boolean connected);
     }
 
     public static void cancel(int id) {

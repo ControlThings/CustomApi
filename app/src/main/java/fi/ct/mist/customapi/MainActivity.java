@@ -189,6 +189,27 @@ public class MainActivity extends AppCompatActivity {
 */
     private void ready() {
 
+        Log.d("list" , "lis");
+        Mist.listPeers(new Mist.ListPeersCb() {
+            @Override
+            public void cb(ArrayList<Peer> peers) {
+                Log.d("cb", "" + peers.size());
+            }
+
+            @Override
+            public void end() {
+                super.end();
+
+                Log.d("end", "end" );
+            }
+
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+            }
+        });
+
+
         Mist.settings(Mist.Settings.Hint.addPeer, new Mist.SettingsCb() {
             @Override
             public void cb() {
@@ -337,6 +358,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 */
+
+
+
     }
 
     @Override

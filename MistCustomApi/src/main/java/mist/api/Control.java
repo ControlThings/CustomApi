@@ -34,19 +34,19 @@ public class Control {
         ControlWrite.request(peer, epid, state, callback);
     }
 
-    public interface FollowCb extends ErrorCallback {
-        public void cbBool(String epid, boolean value);
-        public void cbInt(String epid, int value);
-        public void cbFloat(String epid, float value);
-        public void cbString(String epid, String value);
+    public abstract static class FollowCb extends Callback {
+        public abstract void cbBool(String epid, boolean value);
+        public abstract void cbInt(String epid, int value);
+        public abstract void cbFloat(String epid, float value);
+        public abstract void cbString(String epid, String value);
     }
 
-    public interface ModelCb extends ErrorCallback {
-        public void cb(JSONObject data);
+    public abstract static class ModelCb extends Callback {
+        public abstract void cb(JSONObject data);
     }
 
-    public interface WriteCb extends ErrorCallback {
-        public void cb();
+    public abstract static class WriteCb extends Callback {
+        public abstract void cb();
     }
 
     public static void cancel(int id) {
