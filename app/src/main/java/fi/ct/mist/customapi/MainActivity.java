@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("name", "TestApp");
         startService(intent);
 
-        Log.d("MainActivity", "Mist.login");
-
         Mist.login(new Mist.LoginCb() {
             @Override
             public void cb(boolean connected) {
