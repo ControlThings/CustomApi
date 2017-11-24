@@ -1,4 +1,4 @@
-package mist.api;
+package mist.request;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

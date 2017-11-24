@@ -1,4 +1,4 @@
-package mist.api;
+package mist.request;
 
 import org.junit.Test;
 

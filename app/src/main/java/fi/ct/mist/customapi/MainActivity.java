@@ -1,32 +1,17 @@
 package fi.ct.mist.customapi;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
-import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.bson.BsonBinaryWriter;
-import org.bson.BsonWriter;
-import org.bson.io.BasicOutputBuffer;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import mist.Peer;
-import mist.RequestInterface;
-import mist.api.Control;
 import mist.MistService;
-import mist.api.Mist;
+import mist.request.Mist;
 import mist.sandbox.Callback;
 
 public class MainActivity extends AppCompatActivity {

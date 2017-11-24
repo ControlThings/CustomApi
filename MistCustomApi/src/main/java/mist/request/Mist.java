@@ -1,7 +1,4 @@
-package mist.api;
-
-import android.content.Context;
-import android.support.annotation.Keep;
+package mist.request;
 
 import java.util.ArrayList;
 

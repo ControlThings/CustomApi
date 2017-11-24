@@ -1,8 +1,8 @@
-package mist.api;
+package mist.request;
 
 import android.os.RemoteException;
-import android.util.Log;
 
+import org.bson.BSONException;
 import org.bson.BsonArray;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
@@ -12,26 +12,27 @@ import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import mist.MistIdentity;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
 
-class IdentityList {
-    static int request(Identity.ListCb callback) {
-        final String op = "wish.identity.list";
+class IdentityCreate {
+    static int request(String alias, Identity.CreateCb callback) {
+        final String op = "wish.identity.create";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
+        writer.writeString(alias);
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();
 
         int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
-            private Identity.ListCb callback;
+            private Identity.CreateCb callback;
 
             @Override
             public void ack(byte[] data) throws RemoteException {
@@ -44,18 +45,15 @@ class IdentityList {
 
             }
 
-            private void response(byte[] dataBson) {
-                BsonDocument bson = new RawBsonDocument(dataBson);
-                ArrayList<MistIdentity> identityList = new ArrayList<MistIdentity>();
-                BsonArray bsonIdentityList = new BsonArray(bson.getArray("data"));
-                for (BsonValue listValue : bsonIdentityList) {
-                    MistIdentity identity = new MistIdentity();
-                    identity.setAlias(listValue.asDocument().get("alias").asString().getValue());
-                    identity.setUid(listValue.asDocument().get("uid").asBinary().getData());
-                    identity.setPrivkey(listValue.asDocument().get("privkey").asBoolean().getValue());
-                    identityList.add(identity);
+            private void response(byte[] data) {
+                try {
+                    BsonDocument bson = new RawBsonDocument(data);
+                    BsonDocument bsonDocument = bson.getDocument("data");
+                    mist.Identity identity = mist.Identity.fromBson(bsonDocument);
+                    callback.cb(identity);
+                } catch (BSONException e) {
+                    callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
                 }
-                callback.cb(identityList);
             }
 
             @Override
@@ -64,7 +62,7 @@ class IdentityList {
                 callback.err(code, msg);
             }
 
-            private Callback init(Identity.ListCb callback) {
+            private Callback init(Identity.CreateCb callback) {
                 this.callback = callback;
                 return this;
             }

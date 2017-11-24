@@ -1,41 +1,35 @@
-package mist.api;
+package mist.request;
 
 import android.os.RemoteException;
 
 import org.bson.BsonArray;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
-import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import java.util.ArrayList;
-
-import mist.Peer;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
 /**
- * Created by jeppe on 11/29/16.
+ * Created by jeppe on 11/30/16.
  */
 
-class MistSettings {
-
-    static int request(Mist.Settings.Hint hint, Mist.SettingsCb callback) {
-        final String op = "settings";
+class MistSignals {
+    static int request(Mist.SignalsCb callback) {
+        final String op = "signals";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
-        writer.writeString(hint.getType());
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();
 
         int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
-            private Mist.SettingsCb callback;
+            private Mist.SignalsCb callback;
 
             @Override
             public void ack(byte[] dataBson) throws RemoteException {
@@ -49,7 +43,15 @@ class MistSettings {
             }
 
             private void response(byte[] dataBson) {
-                callback.cb();
+                BsonDocument bson = new RawBsonDocument(dataBson);
+                String signalData = "";
+                if (bson.isString("data")){
+                    signalData = bson.getString("data").getValue();
+                } else if (bson.isArray("data")) {
+                    BsonArray bsonArray = bson.getArray("data");
+                    signalData = bsonArray.get(0).asString().getValue();
+                }
+                callback.cb(signalData);
             }
 
             @Override
@@ -58,7 +60,7 @@ class MistSettings {
                 callback.err(code, msg);
             }
 
-            private Callback init(Mist.SettingsCb callback) {
+            private Callback init(Mist.SignalsCb callback) {
                 this.callback = callback;
                 return this;
             }

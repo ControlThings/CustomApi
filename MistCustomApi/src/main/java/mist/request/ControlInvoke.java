@@ -1,4 +1,4 @@
-package mist.api;
+package mist.request;
 
 import android.os.RemoteException;
 
@@ -48,10 +48,10 @@ class ControlInvoke {
         writer.writeStartDocument();
         writer.writeStartArray("args");
         writer.writeStartDocument();
-        writer.writeBinaryData("luid", new BsonBinary(peer.getLocalId()));
-        writer.writeBinaryData("ruid", new BsonBinary(peer.getRemoteId()));
-        writer.writeBinaryData("rhid", new BsonBinary(peer.getRemoteHostId()));
-        writer.writeBinaryData("rsid", new BsonBinary(peer.getRemoteServiceId()));
+        writer.writeBinaryData("luid", new BsonBinary(peer.getLuid()));
+        writer.writeBinaryData("ruid", new BsonBinary(peer.getRuid()));
+        writer.writeBinaryData("rhid", new BsonBinary(peer.getRhid()));
+        writer.writeBinaryData("rsid", new BsonBinary(peer.getRsid()));
         writer.writeString("protocol", peer.getProtocol());
         writer.writeBoolean("online", peer.isOnline());
         writer.writeEndDocument();
