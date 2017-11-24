@@ -33,6 +33,29 @@ public class Control {
     public static void write(Peer peer, String epid, String state, Control.WriteCb callback) {
         ControlWrite.request(peer, epid, state, callback);
     }
+    public static void read(Peer peer, String epid, Control.ReadCb callback) {
+        ControlRead.request(peer, epid, callback);
+    }
+
+
+    public static void invoke(Peer peer, String epid, InvokeCb callback) {
+        ControlInvoke.request(peer, epid, callback);
+    }
+    public static void invoke(Peer peer, String epid, String value, InvokeCb callback) {
+        ControlInvoke.request(peer, epid, value, callback);
+    }
+    public static void invoke(Peer peer, String epid, Boolean value, InvokeCb callback) {
+        ControlInvoke.request(peer, epid, value, callback);
+    }
+    public static void invoke(Peer peer, String epid, int value, InvokeCb callback) {
+        ControlInvoke.request(peer, epid, value, callback);
+    }
+    public static void invoke(Peer peer, String epid, float value, InvokeCb callback) {
+        ControlInvoke.request(peer, epid, value, callback);
+    }
+    public static void invoke(Peer peer, String epid, byte[] value, InvokeCb callback) {
+        ControlInvoke.request(peer, epid, value, callback);
+    }
 
     public abstract static class FollowCb extends Callback {
         public void cbBool(String epid, boolean value) {};
@@ -47,6 +70,23 @@ public class Control {
 
     public abstract static class WriteCb extends Callback {
         public abstract void cb();
+    }
+
+    public abstract static class ReadCb extends Callback {
+        public void cbBoolean(Boolean data) {};
+        public void cbInt(int data) {};
+        public void cbFloat(double data) {};
+        public void cbString(String data) {};
+    }
+
+    public abstract static class InvokeCb extends Callback {
+        public void cbBoolean(Boolean data) {};
+        public void cbInt(int data) {};
+        public void cbFloat(double data) {};
+        public void cbString(String data) {};
+        public void cbByte(byte[] data) {};
+        public void cbArray(BsonArray array) {};
+        public void cbDocument(BsonDocument document) {};
     }
 
     public static void cancel(int id) {

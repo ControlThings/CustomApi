@@ -20,7 +20,7 @@ import mist.sandbox.Callback;
 
 class IdentityList {
     static int request(Identity.ListCb callback) {
-        final String op = "identity.list";
+        final String op = "wish.identity.list";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
@@ -30,7 +30,7 @@ class IdentityList {
         writer.writeEndDocument();
         writer.flush();
 
-        int requestId = RequestInterface.getInstance().wishApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
+        int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
             private Identity.ListCb callback;
 
             @Override

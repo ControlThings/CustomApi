@@ -1,5 +1,7 @@
 package mist.api;
 
+import org.bson.BsonDocument;
+
 import java.util.ArrayList;
 
 import mist.MistIdentity;
@@ -14,9 +16,16 @@ public class Identity {
         IdentityList.request(callback);
     }
 
+    public static void friendRequest(byte[] uid, BsonDocument contact, FriendRequestCb callback) {
+        IdentityFriendRequest.request(uid, contact, callback);
+    }
+
     public abstract static class ListCb extends Callback {
         public abstract void cb(ArrayList<MistIdentity> identityList);
     }
 
+    public abstract static class FriendRequestCb extends Callback {
+        public abstract void cb(boolean state);
+    }
 
 }

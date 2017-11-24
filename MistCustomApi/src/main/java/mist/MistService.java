@@ -20,10 +20,6 @@ public class MistService extends Service {
 
     private final String TAG = "Mist Service";
 
-
-    private Intent mistSandbox;
-
-
     private MistApiBridgeJni mistApiBridgeJni;
     private boolean started;
 

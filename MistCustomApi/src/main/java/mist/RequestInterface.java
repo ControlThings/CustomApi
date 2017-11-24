@@ -38,71 +38,6 @@ public class RequestInterface {
     }
 
     /**
-     * Make a Wish Api request, such as "identity.list"
-     *
-     * @param op The name of the Wish RPC request
-     * @param argsBson the arguments in BSON format of the request
-     * @param cb the callback to be invoked when a reply arrives
-     * @return the RPC id of the request, or 0 for fail
-     */
-    public synchronized int wishApiRequest(String op, byte[] argsBson, final Callback cb) {
-        Callback intercept = new Callback.Stub() {
-            @Override
-            public void ack(final byte[] data) throws RemoteException {
-
-                Runnable task = new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            cb.ack(data);
-                        } catch (RemoteException e) {
-                            Log.d("wishApiRequest", e.toString());
-                        }
-                    }
-                };
-
-                new Handler(Looper.getMainLooper()).post(task);
-            }
-
-            @Override
-            public void sig(final byte[] data) throws RemoteException {
-
-                Runnable task = new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            cb.sig(data);
-                        } catch (RemoteException e) {
-                            Log.d("wishApiRequest", e.toString());
-                        }
-                    }
-                };
-
-                new Handler(Looper.getMainLooper()).post(task);
-            }
-
-            @Override
-            public void err(final int code, final String msg) throws RemoteException {
-
-                Runnable task = new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            cb.err(code, msg);
-                        } catch (RemoteException e) {
-                            Log.d("wishApiRequest", e.toString());
-                        }
-                    }
-                };
-
-                new Handler(Looper.getMainLooper()).post(task);
-            }
-        };
-        return jniWishApiRequest(op, argsBson, intercept);
-
-    }
-
-    /**
      * Make a Mist Api request, such as "control.model"
      * @param op The name of the Wish RPC request
      * @param argsBson the arguments in BSON format of the request, that is an array named args, for example for "control.model": { args: [0: {luid, ruid, rsid, rhid} ] }"
@@ -175,15 +110,6 @@ public class RequestInterface {
             signalConnected(true);
         }
     }
-
-    /**
-     * JNI call to wishApiRequest
-     * @param op
-     * @param argsBson
-     * @param cb
-     * @return the RPC id of the request, or 0 for fail
-     */
-    native int jniWishApiRequest(String op, byte[] argsBson, Callback cb);
 
     /**
      * JNI call to mistApiRequest

@@ -147,29 +147,6 @@ class MistApiBridge {
      * @param op       RPC operator string
      * @param data     RPC argument BSON
      * @param listener Callback function for response
-     * @return the RPC id of the request, or 0 for error (request is not buffered in case of error)
-     */
-    int wishApiRequest(String op, byte[] data, Callback listener) {
-        int id = 0;
-        if (!logined) {
-            Log.v(TAG, "Error: not logined.. (w)");
-        } else {
-            try {
-                id = appToMist.wishApiRequest(binder, op, data, listener);
-            } catch (RemoteException e) {
-                Log.e(TAG, "RemoteException occured while performing wishApiRequest, restarting service: " + e);
-                startSandboxService();
-            } catch (Exception e) {
-                Log.d(TAG, "appToMist.wishApiRequest failed in an unhandled way!");
-            }
-        }
-        return id;
-    }
-
-    /**
-     * @param op       RPC operator string
-     * @param data     RPC argument BSON
-     * @param listener Callback function for response
      * @return the RPC id of the request, which can be used for mistApiCancel(), or 0 for error (request is not buffered in case of error)
      */
     int mistApiRequest(String op, byte[] data, Callback listener) {
