@@ -29,7 +29,6 @@ def getGitClean = { ->
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
 
     def versionPropsFile = file('version.properties')
     if (versionPropsFile.canRead()) {
@@ -60,7 +59,7 @@ android {
                         def outputFile = output.outputFile
                         if (outputFile != null && outputFile.name.endsWith('.aar')) {
                             def fileName = "${archivesBaseName}-${git_version}.aar"
-                            output.outputFile = new File(outputFile.parent, fileName)
+                            output.outputFileName = new File(outputFile.parent, fileName)
                         }
                     }
                 }
