@@ -18,7 +18,7 @@ import mist.RequestInterface;
  */
 class IdentityFriendRequest {
     static int request(byte[] uid, BsonDocument contact, Identity.FriendRequestCb callback) {
-        final String op = "identity.friendRequest";
+        final String op = "wish.identity.friendRequest";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
