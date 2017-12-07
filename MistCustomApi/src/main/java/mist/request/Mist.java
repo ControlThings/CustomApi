@@ -19,6 +19,10 @@ public class Mist {
         MistListPeers.request(callback);
     }
 
+    public static int addPeer(Peer peer, AddPeerCb callback) {
+        return MistAddPeer.request(peer, callback);
+    }
+
     public static void settings(Settings.Hint hint, SettingsCb callback) {
         MistSettings.request(hint, callback);
     }
@@ -33,6 +37,10 @@ public class Mist {
 
     public abstract static class ListPeersCb extends Callback {
         public abstract void cb(ArrayList<Peer> peers);
+    }
+
+    public abstract static class AddPeerCb extends Callback {
+        public abstract void cb(boolean value);
     }
 
     public abstract static class SettingsCb extends Callback {
@@ -50,7 +58,9 @@ public class Mist {
     public static class Settings{
         public enum Hint {
             commission("commission"),
+            commissionRefresh("commission.refresh"),
             addPeer("addPeer");
+
 
             private String type;
 

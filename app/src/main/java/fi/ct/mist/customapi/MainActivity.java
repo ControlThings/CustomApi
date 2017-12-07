@@ -7,10 +7,13 @@ import android.util.Log;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.bson.RawBsonDocument;
+
 import java.util.ArrayList;
 
 import mist.Peer;
 import mist.MistService;
+import mist.request.Commission;
 import mist.request.Mist;
 import mist.sandbox.Callback;
 
@@ -66,282 +69,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-/*
-        peerOnlineState = (TextView) findViewById(R.id.peerOnlineState);
-        enabled = (Switch) findViewById(R.id.enabled);
-        counter = (TextView) findViewById(R.id.counter);
-        lon = (TextView) findViewById(R.id.lon);
-        lat = (TextView) findViewById(R.id.lat);
-        accuracy = (TextView) findViewById(R.id.accuracy);
-    }
 
-    int id = 0;
-
-    private void follow(final Peer peer) {
-        id = Control.follow(peer, new Control.FollowCb() {
-            @Override
-            public void cbBool(String epid, boolean value) {
-                if (epid.equals("enabled")) {
-                    enabled.setChecked(value);
-                }
-            }
-
-            @Override
-            public void cbInt(final String epid, final int value) {
-
-                String str = Integer.toString(value);
-
-                Log.d("Follow", epid + " : " + value);
-
-                if (epid.equals("counter")) {
-                    counter.setText(str);
-                }
-            }
-
-            @Override
-            public void cbFloat(String epid, float value) {
-
-                String str = Double.toString(value);
-
-                if (epid.equals("lon")) {
-                    lon.setText(str);
-                }
-
-                if (epid.equals("lat")) {
-                    lat.setText(str);
-                }
-
-                if (epid.equals("accuracy")) {
-                    accuracy.setText(str);
-                }
-
-            }
-
-            @Override
-            public void cbString(String epid, String value) {
-
-            }
-
-            @Override
-            public void err(int code, String msg) {
-
-            }
-
-            @Override
-            public void end() {
-
-            }
-        });
-
-        enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Toast.makeText(getApplicationContext(), "Writing enabled to " + b, Toast.LENGTH_SHORT).show();
-                Control.write(peer, "enabled", b, new Control.WriteCb() {
-                    @Override
-                    public void cb() {
-
-                    }
-
-                    @Override
-                    public void err(int code, String msg) {
-
-                    }
-
-                    @Override
-                    public void end() {
-
-                    }
-                });
-            }
-        });
-
-    }
-
-    private void cancel() {
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        if (id != 0) {
-                            Control.cancel(id);
-                        }
-                    }
-                },
-                10000);
-    }
-*/
     private void ready() {
-
-        Log.d("list" , "lis");
-        Mist.listPeers(new Mist.ListPeersCb() {
-            @Override
-            public void cb(ArrayList<Peer> peers) {
-                Log.d("cb", "" + peers.size());
-            }
-
-            @Override
-            public void end() {
-                super.end();
-
-                Log.d("end", "end" );
-            }
-
-            @Override
-            public void err(int code, String msg) {
-                super.err(code, msg);
-            }
-        });
-
-
-        Mist.settings(Mist.Settings.Hint.addPeer, new Mist.SettingsCb() {
-            @Override
-            public void cb() {
-
-            }
-
-            @Override
-            public void err(int code, String msg) {
-
-            }
-
-            @Override
-            public void end() {
-
-            }
-        });
-/*
         Mist.signals(new Mist.SignalsCb() {
             @Override
             public void cb(String signal) {
-                Log.d("Signals", signal);
-                if (signal.equals("peers")) {
-                    Mist.listPeers(new Mist.ListPeersCb() {
+                if (signal.equals("commission.list")) {
+                    Log.d("TEST", "signals commission.list");
+                    Commission.list("*", new Commission.ListCb() {
                         @Override
-                        public void cb(ArrayList<Peer> peers) {
-                            for (final Peer peer : peers) {
-                                if(peer.isOnline()) {
-                                    Toast.makeText(getApplicationContext(), "Peer is online.", Toast.LENGTH_SHORT).show();
-                                    peerOnlineState.setText("Peer is online.");
-                                    Control.model(peer, new Control.ModelCb() {
-                                        @Override
-                                        public void cb(JSONObject data) {
-                                            Log.d("Model:", data.toString());
-                                            follow(peer);
+                        public void cb(byte[] bson) {
+                            Log.d("TEST", "list cb:");
+                            Log.d("TEST", "list cb: " + new RawBsonDocument(bson).toJson());
+                        }
+                    });
+                }
+               Log.d("TEST", "signals: " + signal);
+            }
+        });
 
-                                        }
+        Mist.settings(Mist.Settings.Hint.commissionRefresh, new Mist.SettingsCb() {
+            @Override
+            public void cb() {
+                super.cb();
+                Log.d("TEST", "settings cb");
+            }
+        });
 
-                                        @Override
-                                        public void err(int code, String msg) {
-
-                                        }
-
-                                        @Override
-                                        public void end() {
-
-                                        }
-                                    });
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Peer is offline.", Toast.LENGTH_SHORT).show();
-                                    peerOnlineState.setText("Peer is offline.");
-                                }
+        runOnUiThread(new Runnable() {
+            public void run() {
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                Log.i("tag", "This'll run 300 milliseconds later");
+                                Commission.list("*", new Commission.ListCb() {
+                                    @Override
+                                    public void cb(byte[] bson) {
+                                        Log.d("TEST", "list cb:");
+                                        Log.d("TEST", "list cb: " + new RawBsonDocument(bson).toJson());
+                                    }
+                                });
                             }
-                        }
-
-                        @Override
-                        public void err(int code, String msg) {
-
-                        }
-
-                        @Override
-                        public void end() {
-
-                        }
-                    });
-                }
-
-            }
-
-            @Override
-            public void err(int code, String msg) {
-
-            }
-
-            @Override
-            public void end() {
-
-            }
-
-        });
-
-
-        Mist.listPeers(new Mist.ListPeersCb() {
-            @Override
-            public void cb(ArrayList<Peer> peers) {
-                if (peers.size() == 0) {
-                    BasicOutputBuffer buffer = new BasicOutputBuffer();
-                    BsonWriter writer = new BsonBinaryWriter(buffer);
-                    writer.writeStartDocument();
-                    writer.writeStartArray("args");
-                    writer.writeEndArray();
-                    writer.writeEndDocument();
-                    writer.flush();
-
-                    RequestInterface.getInstance().mistApiRequest("settings", buffer.toByteArray(), new Callback.Stub() {
-                        @Override
-                        public void ack(byte[] data) throws RemoteException {
-
-                        }
-
-                        @Override
-                        public void sig(byte[] data) throws RemoteException {
-
-                        }
-
-                        @Override
-                        public void err(int code, String msg) throws RemoteException {
-
-                        }
-
-
-                    });
-                }
-
-                for (final Peer peer : peers) {
-                    Control.model(peer, new Control.ModelCb() {
-                        @Override
-                        public void cb(JSONObject data) {
-                            Log.d("Model:", data.toString());
-
-                            counter.setText("This is bahamas.");
-
-                            follow(peer);
-                        }
-
-                        @Override
-                        public void err(int code, String msg) {
-
-                        }
-
-                        @Override
-                        public void end() {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void err(int code, String msg) {
-
-            }
-
-            @Override
-            public void end() {
-
+                        },
+                        5000);
             }
         });
-*/
-
 
 
     }
@@ -353,6 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
         //cancel();
     }
-    }
+}
 
 
