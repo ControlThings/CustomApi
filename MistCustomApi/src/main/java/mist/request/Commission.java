@@ -12,6 +12,10 @@ public class Commission {
         return CommissionList.request(type, callback);
     }
 
+    public static int list(ListCb callback) {
+        return CommissionList.request(null, callback);
+    }
+
     public abstract static class ListCb extends Callback {
         public abstract void cb(byte[] bson);
     }

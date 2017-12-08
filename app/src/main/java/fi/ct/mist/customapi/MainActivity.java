@@ -76,15 +76,7 @@ public class MainActivity extends AppCompatActivity {
             public void cb(String signal) {
                 if (signal.equals("commission.list")) {
                     Log.d("TEST", "signals commission.list");
-                    Commission.list("*", new Commission.ListCb() {
-                        @Override
-                        public void cb(byte[] bson) {
-                            Log.d("TEST", "list cb:");
-                            Log.d("TEST", "list cb: " + new RawBsonDocument(bson).toJson());
-                        }
-                    });
                 }
-               Log.d("TEST", "signals: " + signal);
             }
         });
 
@@ -102,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                         new Runnable() {
                             public void run() {
                                 Log.i("tag", "This'll run 300 milliseconds later");
-                                Commission.list("*", new Commission.ListCb() {
+                                Commission.list( new Commission.ListCb() {
                                     @Override
                                     public void cb(byte[] bson) {
                                         Log.d("TEST", "list cb:");

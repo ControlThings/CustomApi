@@ -26,7 +26,9 @@ class CommissionList {
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
-        writer.writeString(type);
+        if (type != null) {
+            writer.writeString(type);
+        }
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();
