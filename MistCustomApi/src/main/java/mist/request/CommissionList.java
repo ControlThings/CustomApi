@@ -14,6 +14,7 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import mist.CommissionItem;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
@@ -48,13 +49,22 @@ class CommissionList {
             }
 
             private void response(byte[] data) {
+                List<CommissionItem> commissionItems = new ArrayList<>();
                 try {
-                    BsonDocument bson = new RawBsonDocument(data);
+                    BsonDocument bsonDocument = new RawBsonDocument(data);
+                    BsonArray bsonArray = bsonDocument.getArray("data");
+                    for (BsonValue bsonValue: bsonArray) {
+                        CommissionItem commissionItem = CommissionItem.fromBson(bsonValue.asDocument());
+                        if (commissionItem != null) {
+                            commissionItems.add(commissionItem);
+                        }
+                    }
+
                 } catch (BSONException e) {
                     callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
                     return;
                 }
-                callback.cb(data);
+                callback.cb(commissionItems);
             }
 
             @Override

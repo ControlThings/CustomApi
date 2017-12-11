@@ -1,5 +1,8 @@
 package mist.request;
 
+import java.util.List;
+
+import mist.CommissionItem;
 import mist.RequestInterface;
 
 /**
@@ -17,7 +20,7 @@ public class Commission {
     }
 
     public abstract static class ListCb extends Callback {
-        public abstract void cb(byte[] bson);
+        public abstract void cb(List<CommissionItem> items);
     }
 
 }

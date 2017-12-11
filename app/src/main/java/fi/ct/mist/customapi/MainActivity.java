@@ -1,5 +1,6 @@
 package fi.ct.mist.customapi;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,14 +8,18 @@ import android.util.Log;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.bson.BsonDocument;
 import org.bson.RawBsonDocument;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import mist.CommissionItem;
 import mist.Peer;
 import mist.MistService;
 import mist.request.Commission;
 import mist.request.Mist;
+import mist.request.Settings;
 import mist.sandbox.Callback;
 
 public class MainActivity extends AppCompatActivity {
@@ -78,9 +83,15 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TEST", "signals commission.list");
                 }
             }
+
+            @Override
+            public void cb(String signal, BsonDocument document) {
+                Log.d("TEST", "emit signal " + signal);
+                Log.d("TEST", "emit document " + document.getString("ep"));
+            }
         });
 
-        Mist.settings(Mist.Settings.Hint.commissionRefresh, new Mist.SettingsCb() {
+        Settings.commissionRefresh(new Settings.CommissionRefreshCb() {
             @Override
             public void cb() {
                 super.cb();
@@ -96,9 +107,27 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i("tag", "This'll run 300 milliseconds later");
                                 Commission.list( new Commission.ListCb() {
                                     @Override
-                                    public void cb(byte[] bson) {
-                                        Log.d("TEST", "list cb:");
-                                        Log.d("TEST", "list cb: " + new RawBsonDocument(bson).toJson());
+                                    public void cb(List<CommissionItem> items) {
+
+                                        for (CommissionItem item : items) {
+
+                                            if (item.getType().equals(CommissionItem.type_wifi)) {
+                                                Settings.commission(item, new Settings.CommissionCb() {
+                                                    @Override
+                                                    public void cb() {
+                                                        super.cb();
+                                                        Log.d("TEST", "settings commission cb");
+                                                    }
+                                                });
+                                            }
+                                            Log.d("TEST", "type: " + item.getType() + " name: " + item.getName());
+
+
+
+                                        }
+
+                                       ;
+
                                     }
                                 });
                             }

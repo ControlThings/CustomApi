@@ -1,11 +1,18 @@
 package mist.request;
 
 import android.os.RemoteException;
+import android.util.Log;
 
+import org.bson.BsonBinary;
+import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
+import org.bson.BsonDocumentReader;
+import org.bson.BsonReader;
 import org.bson.BsonWriter;
+import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
+import mist.CommissionItem;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
@@ -13,22 +20,29 @@ import mist.sandbox.Callback;
  * Created by jeppe on 11/29/16.
  */
 
-class MistSettings {
+class SettingsCommission {
 
-    static int request(Mist.Settings.Hint hint, Mist.SettingsCb callback) {
+    static int request(CommissionItem item, Settings.CommissionCb callback) {
         final String op = "settings";
+        final String settingsType = "commission";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
-        writer.writeString(hint.getType());
+        writer.writeString(settingsType);
+
+        if (item != null) {
+            BsonReader bsonReader = new BsonDocumentReader(new RawBsonDocument(item.toBson()));
+            writer.pipe(bsonReader);
+        }
+
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();
 
         int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
-            private Mist.SettingsCb callback;
+            private Settings.CommissionCb callback;
 
             @Override
             public void ack(byte[] dataBson) throws RemoteException {
@@ -51,7 +65,7 @@ class MistSettings {
                 callback.err(code, msg);
             }
 
-            private Callback init(Mist.SettingsCb callback) {
+            private Callback init(Settings.CommissionCb callback) {
                 this.callback = callback;
                 return this;
             }

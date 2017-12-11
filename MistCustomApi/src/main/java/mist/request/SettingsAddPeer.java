@@ -2,31 +2,34 @@ package mist.request;
 
 import android.os.RemoteException;
 
-import org.bson.BSONException;
-import org.bson.BsonArray;
 import org.bson.BsonBinaryWriter;
-import org.bson.BsonDocument;
 import org.bson.BsonWriter;
-import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
-class MistSignals {
-    static int request(Mist.SignalsCb callback) {
-        final String op = "signals";
+/**
+ * Created by jeppe on 11/29/16.
+ */
+
+class SettingsAddPeer {
+
+    static int request(Settings.AddPeerCb callback) {
+        final String op = "settings";
+        final String settingsType = "addPeer";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
+        writer.writeString(settingsType);
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();
 
         int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
-            private Mist.SignalsCb callback;
+            private Settings.AddPeerCb callback;
 
             @Override
             public void ack(byte[] dataBson) throws RemoteException {
@@ -39,30 +42,8 @@ class MistSignals {
                 response(dataBson);
             }
 
-            private void response(byte[] data) {
-
-                String signal;
-                BsonDocument document = null;
-                try {
-                    BsonDocument bsonDocument = new RawBsonDocument(data);
-                    BsonArray bsonArray = bsonDocument.getArray("data");
-                    if (bsonArray.size() == 0) {
-                        return;
-                    }
-                    signal = bsonArray.get(0).asString().getValue();
-                    if (bsonArray.size() > 1 && bsonArray.get(1).isDocument()) {
-                        document = bsonArray.get(1).asDocument();
-                    }
-
-                } catch (BSONException e) {
-                    callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
-                    return;
-                }
-                if (document != null) {
-                    callback.cb(signal, document);
-                } else {
-                    callback.cb(signal);
-                }
+            private void response(byte[] dataBson) {
+                callback.cb();
             }
 
             @Override
@@ -71,7 +52,7 @@ class MistSignals {
                 callback.err(code, msg);
             }
 
-            private Callback init(Mist.SignalsCb callback) {
+            private Callback init(Settings.AddPeerCb callback) {
                 this.callback = callback;
                 return this;
             }

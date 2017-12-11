@@ -1,5 +1,7 @@
 package mist.request;
 
+import org.bson.BsonDocument;
+
 import java.util.ArrayList;
 
 import mist.Peer;
@@ -23,16 +25,13 @@ public class Mist {
         return MistAddPeer.request(peer, callback);
     }
 
-    public static void settings(Settings.Hint hint, SettingsCb callback) {
-        MistSettings.request(hint, callback);
-    }
-
     public static void login(LoginCb callback) {
         RequestInterface.getInstance().registerLoginCB(callback);
     }
 
     public abstract static class SignalsCb extends Callback {
         public abstract void cb(String signal);
+        public abstract void cb(String signal, BsonDocument document);
     }
 
     public abstract static class ListPeersCb extends Callback {
@@ -43,35 +42,12 @@ public class Mist {
         public abstract void cb(boolean value);
     }
 
-    public abstract static class SettingsCb extends Callback {
-        public void cb() {};
-    }
-
     public abstract static class LoginCb extends Callback {
         public abstract void cb(boolean connected);
     }
 
     public static void cancel(int id) {
         RequestInterface.getInstance().mistApiRequestCancel(id);
-    }
-
-    public static class Settings{
-        public enum Hint {
-            commission("commission"),
-            commissionRefresh("commission.refresh"),
-            addPeer("addPeer");
-
-
-            private String type;
-
-            private Hint(String type) {
-                this.type = type;
-            }
-
-            public String getType() {
-                return type;
-            }
-        }
     }
 
 
