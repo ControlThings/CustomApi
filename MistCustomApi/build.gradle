@@ -81,5 +81,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.1'
     testCompile 'junit:junit:4.12'
-    compile files('libs/bson-3.2.2.jar')
+    // https://mvnrepository.com/artifact/org.mongodb/bson
+    compile group: 'org.mongodb', name: 'bson', version: '3.6.0'
 }
