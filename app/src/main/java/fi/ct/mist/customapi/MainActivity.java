@@ -8,8 +8,14 @@ import android.util.Log;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.bson.BSONException;
+import org.bson.BsonArray;
+import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
+import org.bson.BsonValue;
+import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
+import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView lat;
     private TextView accuracy;
 
+    int signalsId;
     // Intent intent;
 
     @Override
@@ -76,19 +83,63 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ready() {
-        Mist.signals(new Mist.SignalsCb() {
+        if (signalsId != 0) {
+            Mist.cancel(signalsId);
+        }
+        signalsId = Mist.signals(new Mist.SignalsCb() {
             @Override
             public void cb(String signal) {
                 if (signal.equals("commission.list")) {
                     Log.d("TEST", "signals commission.list");
                 }
+
+                Log.d("TEST", "signal " + signal);
+
             }
 
             @Override
             public void cb(String signal, BsonDocument document) {
-                Log.d("TEST", "emit signal " + signal);
-                Log.d("TEST", "emit document " + document.getString("ep"));
+                Log.d("TEST", "signal document " + signal + " : " +document.toJson());
+                if (signal.equals("commission.err")) {
+                    Log.d("TEST", "commission.err " + document.toJson());
+                }
+
+
+                if (signal.equals("commission.claimed")) {
+                    try {
+                        BsonArray bsonArray = document.getArray("args");
+                        for (BsonValue value : bsonArray) {
+                            String ssid = value.asDocument().getString("ssid").getValue();
+
+                            if (ssid.contains("Buffalo")) {
+                                Log.d("TEST", "commission.claimed ssid: " + ssid);
+                                Settings.commissionSetWifi(ssid, "19025995", new Settings.CommissionSetWifiCb() {
+                                    @Override
+                                    public void cb() {
+                                        super.cb();
+                                    }
+
+                                    @Override
+                                    public void err(int code, String msg) {
+                                        super.err(code, msg);
+                                        Log.d("TEST", "commission.claimed err: " + msg);
+                                    }
+                                });
+                                return;
+                            }
+                        }
+                    } catch (BSONException e) {
+                        Log.d("TEST", "claimed err " + e.getMessage());
+                    }
+
+
+                    Log.d("TEST", "commission.setWifi");
+                }
+
+
+
             }
+
         });
 
         Settings.commissionRefresh(new Settings.CommissionRefreshCb() {
@@ -105,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                         new Runnable() {
                             public void run() {
                                 Log.i("tag", "This'll run 300 milliseconds later");
-                                Commission.list( new Commission.ListCb() {
+                                Commission.list(new Commission.ListCb() {
                                     @Override
                                     public void cb(List<CommissionItem> items) {
 
@@ -123,10 +174,9 @@ public class MainActivity extends AppCompatActivity {
                                             Log.d("TEST", "type: " + item.getType() + " name: " + item.getName());
 
 
-
                                         }
 
-                                       ;
+                                        ;
 
                                     }
                                 });
@@ -143,8 +193,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d("Mainactivity", "onDestroy");
-
+        if (signalsId != 0) {
+            Mist.cancel(signalsId);
+            signalsId = 0;
+        }
         //cancel();
+        Log.d("Mainactivity", "onDestroy exiting");
     }
 }
 

@@ -20,6 +20,10 @@ public class Settings {
         SettingsCommissionRefresh.request(callback);
     }
 
+    public static void commissionSetWifi(String ssid, String password, CommissionSetWifiCb callback) {
+        SettingsCommissionSetWifi.request(ssid, password, callback);
+    }
+
     public static void addPeer(AddPeerCb callback) {
         SettingsAddPeer.request(callback);
     }
@@ -28,6 +32,10 @@ public class Settings {
     }
 
     public abstract static class CommissionRefreshCb extends Callback {
+        public void cb() {};
+    }
+
+    public abstract static class CommissionSetWifiCb extends Callback {
         public void cb() {};
     }
 
