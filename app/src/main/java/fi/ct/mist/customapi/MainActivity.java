@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void cb(String signal, BsonDocument document) {
-                Log.d("TEST", "signal document " + signal + " : " +document.toJson());
+                Log.d("TEST", "signal document " + signal + " : " + document.toJson());
                 if (signal.equals("commission.err")) {
                     Log.d("TEST", "commission.err " + document.toJson());
                 }
@@ -136,7 +136,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TEST", "commission.setWifi");
                 }
 
-
+                if (signal.equals("commission.finished")) {
+                    Log.d("TEST", "FINISHED peers: " + document.toJson());
+                }
 
             }
 
