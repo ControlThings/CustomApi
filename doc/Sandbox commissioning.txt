@@ -1,0 +1,57 @@
+title Sandbox commissioning; communication between MistUi and Sandboxed app
+
+
+note left of mist ui: MistUi has been started as a background service by the sandboxed app
+
+sandboxed app->mist ui: signal: commission.refresh
+note over mist ui: MistUi builds list of devices seen on wifi and wld
+mist ui->sandboxed app: signal: commission.list
+sandboxed app->mist ui: rpc call: sandboxed.commision.list
+mist ui->sandboxed app: rpc callback: list of wifis and wld commissionable devices
+
+alt Wifi commissioning
+
+sandboxed app->mist ui: commission.start { wifi network from list }
+note over mist ui
+    Builds the "CommissioningItem" object, 
+    and start CommissiongStateMachine with it
+end note
+
+
+note left of mist ui: CommissioningStateMachine starts reporting state transitions:
+
+mist ui->sandboxed app: signal: commssion.progress { hint: old state -> new state }
+
+
+mist ui->sandboxed app: signal: commission.claimed { hint: list of wifis that the peer sees join }
+
+sandboxed app->mist ui: signal: commssion.setWifi { hint: ssid, password }
+note over mist ui: MistUi adds all the peers from commissioned device to the Sandbox
+mist ui-> sandboxed app: signal: commssion.finished { hint: list of peers in commissioned device }
+
+else requesting access to an already commissioned device
+
+sandboxed app->mist ui: signal commssioning.start { wld item from list }
+note over sandboxed app: Notify user that we now wait for the owner of the device to let us in.
+note over mist ui 
+MistUI sends wld.friendRequest RPC to the local Wish core. 
+After some time, local Wish core might send up a signal to MistUi: "friendRequesteeAccepted".
+MistUi adds the peers to Sandbox.
+end note
+
+opt owner of device lets us in
+mist ui->sandboxed app: signal: commissioning.finished { list of peers in commissionied device }
+end
+
+note right of sandboxed app: if owner never lets us in, user should be notified after a timeout
+
+else wld commissioning (in case claim: true??)
+sandboxed app->mist ui: signal commssioning.start { wld item from list }
+mist ui->sandboxed app: signal: commissioning.finished { list of peers in commissionied device }
+
+end
+
+note left of mist ui: At any time can the following signals occur:
+
+mist ui->sandboxed app: signal: commission.err { hint: description of error }
+mist ui->sandboxed app: signal: commission.timeout { hint: current state }
