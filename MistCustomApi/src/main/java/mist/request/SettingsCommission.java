@@ -22,20 +22,16 @@ import mist.sandbox.Callback;
 
 class SettingsCommission {
 
-    static int request(CommissionItem item, Settings.CommissionCb callback) {
+    static int request(Settings.CommissionCb callback) {
         final String op = "settings";
         final String settingsType = "commission";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
+
         writer.writeStartArray("args");
         writer.writeString(settingsType);
-
-        if (item != null) {
-            BsonReader bsonReader = new BsonDocumentReader(new RawBsonDocument(item.toBson()));
-            writer.pipe(bsonReader);
-        }
 
         writer.writeEndArray();
         writer.writeEndDocument();

@@ -23,6 +23,7 @@ import java.util.List;
 import mist.CommissionItem;
 import mist.Peer;
 import mist.MistService;
+import mist.WifiItem;
 import mist.request.Commission;
 import mist.request.Mist;
 import mist.request.Settings;
@@ -83,9 +84,78 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ready() {
+
+        Commission.refresh(new Commission.RefreshCb() {
+            @Override
+            public void cb() {
+
+                Commission.list(new Commission.ListCb() {
+                    @Override
+                    public void cb(List<CommissionItem> items) {
+
+                        for (CommissionItem item : items) {
+                            if (item.getType().equals(CommissionItem.type_wifi)) {
+
+
+                                Commission.start(item, new Commission.StartCb() {
+                                    @Override
+                                    public void cb(List<WifiItem> items) {
+
+                                        for (WifiItem wifiItem : items) {
+                                            if (wifiItem.getSsid().contains("Buffalo")) {
+
+
+                                                Commission.setWifi(wifiItem, "19025995", new Commission.SetWifiCb() {
+                                                    @Override
+                                                    public void cb(List<Peer> peers) {
+                                                        Log.d("TEST", "finished " + peers.size());
+                                                    }
+
+                                                    @Override
+                                                    public void err(int code, String msg) {
+                                                        super.err(code, msg);
+                                                        Log.d("Test", "setWifi err " + msg);
+                                                    }
+                                                });
+                                            }
+                                        }
+
+
+                                    }
+
+                                    @Override
+                                    public void err(int code, String msg) {
+                                        super.err(code, msg);
+                                        Log.d("Test", "start err " + msg);
+                                    }
+                                });
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void err(int code, String msg) {
+                        super.err(code, msg);
+                        Log.d("Test", "list err " + msg);
+                    }
+                });
+
+            }
+
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+                Log.d("Test", "refresh err " + msg);
+
+            }
+        });
+
+        /*
         if (signalsId != 0) {
             Mist.cancel(signalsId);
         }
+
         signalsId = Mist.signals(new Mist.SignalsCb() {
             @Override
             public void cb(String signal) {
@@ -188,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+*/
     }
 
     @Override

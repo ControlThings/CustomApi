@@ -30,8 +30,8 @@ public class Mist {
     }
 
     public abstract static class SignalsCb extends Callback {
-        public abstract void cb(String signal);
-        public abstract void cb(String signal, BsonDocument document);
+        public void cb(String signal) {};
+        public void cb(String signal, BsonDocument document) {};
     }
 
     public abstract static class ListPeersCb extends Callback {
