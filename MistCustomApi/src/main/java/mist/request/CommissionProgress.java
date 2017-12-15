@@ -1,76 +1,70 @@
 package mist.request;
 
 import android.os.RemoteException;
-import android.util.Log;
 
 import org.bson.BSONException;
 import org.bson.BsonArray;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
-import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import mist.CommissionItem;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
-
-class CommissionList {
-    static int request(String type, Commission.ListCb callback) {
-        final String op = "commission.list";
+class CommissionProgress {
+    static int request(Commission.ProgressCb callback) {
+        final String op = "signals";
+        final String signalType = "commission.progress";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
-        if (type != null) {
-            writer.writeString(type);
-        }
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();
 
         int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
-            private Commission.ListCb callback;
+            private Commission.ProgressCb callback;
 
             @Override
-            public void ack(byte[] data) throws RemoteException {
-                response(data);
+            public void ack(byte[] dataBson) throws RemoteException {
+                response(dataBson);
                 callback.end();
             }
 
             @Override
-            public void sig(byte[] data) throws RemoteException {
-
+            public void sig(byte[] dataBson) throws RemoteException {
+                response(dataBson);
             }
 
             private void response(byte[] data) {
-                List<CommissionItem> commissionItems = new ArrayList<>();
+
+                String state;
+                int progress;
                 try {
                     BsonDocument bsonDocument = new RawBsonDocument(data);
-
-
-                    Log.d("TEST", "list res: " + bsonDocument.toJson());
-
-
                     BsonArray bsonArray = bsonDocument.getArray("data");
-                    for (BsonValue bsonValue: bsonArray) {
-                        CommissionItem commissionItem = CommissionItem.fromBson(bsonValue.asDocument());
-                        if (commissionItem != null) {
-                            commissionItems.add(commissionItem);
-                        }
+                    if (bsonArray.size() < 2) {
+                        return;
                     }
+                    String signal = bsonArray.get(0).asString().getValue();
+                    if (!signal.equals(signalType)) {
+                        return;
+                    }
+
+                    BsonDocument document = bsonArray.get(1).asDocument();
+                    state = document.getString("state").getValue();
 
                 } catch (BSONException e) {
                     callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
                     return;
                 }
-                callback.cb(commissionItems);
+
+                callback.cb(state);
+
             }
 
             @Override
@@ -79,13 +73,11 @@ class CommissionList {
                 callback.err(code, msg);
             }
 
-            private Callback init(Commission.ListCb callback) {
+            private Callback init(Commission.ProgressCb callback) {
                 this.callback = callback;
                 return this;
             }
-
         }.init(callback));
-
 
         if (requestId == 0) {
             callback.err(0, "request fail");

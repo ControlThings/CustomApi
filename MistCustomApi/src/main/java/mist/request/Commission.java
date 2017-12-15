@@ -33,10 +33,13 @@ public class Commission {
         return CommissionSetWifi.request(item, password, callback);
     }
 
+    public static int progress(ProgressCb callback) {
+        return CommissionProgress.request(callback);
+    }
+
     public abstract static class RefreshCb extends Callback {
         public abstract void cb();
     }
-
 
     public abstract static class ListCb extends Callback {
         public abstract void cb(List<CommissionItem> items);
@@ -48,5 +51,9 @@ public class Commission {
 
     public abstract static class SetWifiCb extends Callback {
         public abstract void cb(List<Peer> peers);
+    }
+
+    public abstract static class ProgressCb extends Callback {
+        public abstract void cb(String state);
     }
 }
