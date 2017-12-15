@@ -47,6 +47,7 @@ public class Commission {
 
     public abstract static class StartCb extends Callback {
         public abstract void cb(List<WifiItem> items);
+        public abstract void finished(List<Peer> items);
     }
 
     public abstract static class SetWifiCb extends Callback {

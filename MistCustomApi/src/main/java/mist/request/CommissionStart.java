@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mist.CommissionItem;
+import mist.Peer;
 import mist.RequestInterface;
 import mist.WifiItem;
 import mist.sandbox.Callback;
@@ -92,6 +93,33 @@ class CommissionStart {
                                 }
                             }
                             callback.err(COMMISSION_ERROR_CODE, "Non available wifi or bad bson structure");
+                            Mist.cancel(signalId);
+                        }
+
+                        if (signal.equals("commission.finished")) {
+
+                            List<Peer> items = new ArrayList<>();
+                            if (document.containsKey("args")) {
+                                if (document.get("args").isArray()) {
+                                    BsonArray argsArray = document.getArray("args");
+                                    if (argsArray.size() > 0) {
+                                        for (BsonValue value : argsArray) {
+                                            if (value.isDocument()) {
+                                                BsonDocument peerDocument = value.asDocument();
+                                                if (peerDocument != null) {
+                                                    items.add(Peer.fromBson(peerDocument));
+                                                }
+                                            }
+                                        }
+                                        if (items.size() > 0) {
+                                            callback.finished(items);
+                                            Mist.cancel(signalId);
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                            callback.err(COMMISSION_ERROR_CODE, "Non available peers or bad bson structure");
                             Mist.cancel(signalId);
                         }
 
