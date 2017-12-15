@@ -14,15 +14,15 @@ import mist.RequestInterface;
 public class Mist {
 
     public static int signals(SignalsCb callback) {
-        return MistSignals.request(callback);
+        return MistSignals.request(null, callback);
+    }
+
+    public static int signals(Peer peer, SignalsCb callback) {
+        return MistSignals.request(peer, callback);
     }
 
     public static void listPeers(ListPeersCb callback) {
         MistListPeers.request(callback);
-    }
-
-    public static int addPeer(Peer peer, AddPeerCb callback) {
-        return MistAddPeer.request(peer, callback);
     }
 
     public static void login(LoginCb callback) {
@@ -36,10 +36,6 @@ public class Mist {
 
     public abstract static class ListPeersCb extends Callback {
         public abstract void cb(ArrayList<Peer> peers);
-    }
-
-    public abstract static class AddPeerCb extends Callback {
-        public abstract void cb(boolean value);
     }
 
     public abstract static class LoginCb extends Callback {

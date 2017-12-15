@@ -4,21 +4,29 @@ import android.os.RemoteException;
 
 import org.bson.BSONException;
 import org.bson.BsonArray;
+import org.bson.BsonBinary;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentReader;
+import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import mist.Peer;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
-class MistSignals {
-    static int request(Peer peer, Mist.SignalsCb callback) {
-        String op = "signals";
+import static mist.request.Callback.BSON_ERROR_CODE;
+import static mist.request.Callback.BSON_ERROR_STRING;
 
+
+class IdentityFriendRequestAccept {
+    static int request(Peer peer, byte[] luid, byte[] ruid, Identity.FriendRequestAcceptCb callback) {
+        final String op = "wish.identity.friendRequestAccept";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
@@ -27,52 +35,42 @@ class MistSignals {
 
         if (peer != null) {
             writer.pipe(new BsonDocumentReader(new RawBsonDocument(peer.toBson())));
-            op = "wish."+op;
+        } else {
+            writer.writeNull();
         }
+
+        writer.writeBinaryData(new BsonBinary(luid));
+
+        writer.writeBinaryData(new BsonBinary(ruid));
 
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();
 
         int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
-            private Mist.SignalsCb callback;
-            private String op;
+            private Identity.FriendRequestAcceptCb callback;
 
             @Override
-            public void ack(byte[] dataBson) throws RemoteException {
-                response(dataBson);
+            public void ack(byte[] data) throws RemoteException {
+                response(data);
                 callback.end();
             }
 
             @Override
-            public void sig(byte[] dataBson) throws RemoteException {
-                response(dataBson);
+            public void sig(byte[] data) throws RemoteException {
+
             }
 
             private void response(byte[] data) {
-
-                String signal;
-                BsonDocument document = null;
+                boolean value;
                 try {
-                    BsonDocument bsonDocument = new RawBsonDocument(data);
-                    BsonArray bsonArray = bsonDocument.getArray("data");
-                    if (bsonArray.size() == 0) {
-                        return;
-                    }
-                    signal = bsonArray.get(0).asString().getValue();
-                    if (bsonArray.size() > 1 && bsonArray.get(1).isDocument()) {
-                        document = bsonArray.get(1).asDocument();
-                    }
-
+                    BsonDocument bson = new RawBsonDocument(data);
+                    value = bson.getBoolean("data").getValue();
                 } catch (BSONException e) {
-                    callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
+                    callback.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                     return;
                 }
-                if (document != null) {
-                    callback.cb(signal, document);
-                } else {
-                    callback.cb(signal);
-                }
+                callback.cb(value);
             }
 
             @Override
@@ -81,12 +79,13 @@ class MistSignals {
                 callback.err(code, msg);
             }
 
-            private Callback init(Mist.SignalsCb callback,String op) {
+            private Callback init(Identity.FriendRequestAcceptCb callback) {
                 this.callback = callback;
-                this.op = op;
                 return this;
             }
-        }.init(callback, op));
+
+        }.init(callback));
+
 
         if (requestId == 0) {
             callback.err(0, "request fail");

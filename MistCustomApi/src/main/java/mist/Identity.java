@@ -25,6 +25,7 @@ public class Identity implements Serializable {
     private boolean privkey;
     private byte[] pubkey;
     private Hosts hosts;
+    private BsonDocument meta;
 
     private static int WISH_UID_LEN = 32;
 
@@ -84,6 +85,10 @@ public class Identity implements Serializable {
                         }
                     }
                     identity.hosts = host;
+                }
+
+                if (bsonDocument.containsKey("meta")) {
+                    identity.meta = bsonDocument.getDocument("meta");
                 }
 
             } else {
@@ -151,6 +156,10 @@ public class Identity implements Serializable {
 
     public Hosts getHosts() {
         return hosts;
+    }
+
+    public BsonDocument getMeta() {
+        return meta;
     }
 
     public boolean equals(Object object) {

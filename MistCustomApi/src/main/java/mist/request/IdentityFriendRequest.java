@@ -6,24 +6,32 @@ import org.bson.BSONException;
 import org.bson.BsonBinary;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
+import org.bson.BsonDocumentReader;
 import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 
+import mist.Peer;
 import mist.RequestInterface;
 
 /**
  * Created by jeppe on 9/28/16.
  */
 class IdentityFriendRequest {
-    static int request(byte[] uid, BsonDocument contact, Identity.FriendRequestCb callback) {
+    static int request(Peer peer, byte[] uid, BsonDocument contact, Identity.FriendRequestCb callback) {
         final String op = "wish.identity.friendRequest";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
+
+        if (peer != null) {
+            writer.pipe(new BsonDocumentReader(new RawBsonDocument(peer.toBson())));
+        } else {
+            writer.writeNull();
+        }
 
         writer.writeBinaryData(new BsonBinary(uid));
 

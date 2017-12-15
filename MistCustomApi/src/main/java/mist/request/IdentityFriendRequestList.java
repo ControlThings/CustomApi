@@ -16,13 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mist.Peer;
+import mist.Request;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
+import static mist.request.Callback.BSON_ERROR_CODE;
+import static mist.request.Callback.BSON_ERROR_STRING;
 
-class IdentityCreate {
-    static int request(Peer peer, String alias, Identity.CreateCb callback) {
-        final String op = "wish.identity.create";
+
+class IdentityFriendRequestList {
+    static int request(Peer peer, Identity.FriendRequestListCb callback) {
+        final String op = "wish.identity.friendRequestList";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
@@ -35,13 +39,12 @@ class IdentityCreate {
             writer.writeNull();
         }
 
-        writer.writeString(alias);
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();
 
         int requestId = RequestInterface.getInstance().mistApiRequest(op, buffer.toByteArray(), new Callback.Stub() {
-            private Identity.CreateCb callback;
+            private Identity.FriendRequestListCb callback;
 
             @Override
             public void ack(byte[] data) throws RemoteException {
@@ -55,14 +58,30 @@ class IdentityCreate {
             }
 
             private void response(byte[] data) {
+                List<Request> requests;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    BsonDocument bsonDocument = bson.getDocument("data");
-                    mist.Identity identity = mist.Identity.fromBson(bsonDocument);
-                    callback.cb(identity);
+                    requests = new ArrayList<>();
+                    BsonArray bsonArray = new BsonArray(bson.getArray("data"));
+                    for (BsonValue listValue : bsonArray) {
+                        Request request = new Request();
+                        BsonDocument document = listValue.asDocument();
+                        request.setLuid(document.get("luid").asBinary().getData());
+                        request.setRuid(document.get("ruid").asBinary().getData());
+                        request.setAlias(document.get("alias").asString().getValue());
+                        request.setPubkey(document.get("pubkey").asBinary().getData());
+
+                        if (document.containsKey("meta")) {
+                            request.setMeta(document.getDocument("meta").asDocument());
+                        }
+
+                        requests.add(request);
+                    }
                 } catch (BSONException e) {
-                    callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
+                    callback.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                callback.cb(requests);
             }
 
             @Override
@@ -71,7 +90,7 @@ class IdentityCreate {
                 callback.err(code, msg);
             }
 
-            private Callback init(Identity.CreateCb callback) {
+            private Callback init(Identity.FriendRequestListCb callback) {
                 this.callback = callback;
                 return this;
             }
