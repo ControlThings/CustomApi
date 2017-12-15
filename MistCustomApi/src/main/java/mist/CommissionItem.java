@@ -83,6 +83,10 @@ public class CommissionItem implements Serializable {
                     localItem.classType = bsonDocument.getString("class").getValue();
                 }
 
+                if (bsonDocument.containsKey("claim")) {
+                    localItem.claim = bsonDocument.getBoolean("claim").getValue();
+                }
+
                 commissionItem.item = localItem;
             } else {
                 return null;
@@ -139,6 +143,7 @@ public class CommissionItem implements Serializable {
         private byte[] rhid;
         private byte[] pubkey;
         private String classType;
+        private boolean claim;
 
         public String getAlias() {
             return alias;
@@ -158,6 +163,10 @@ public class CommissionItem implements Serializable {
 
         public String getClassType() {
             return classType;
+        }
+
+        public boolean isClaim() {
+            return claim;
         }
     }
 

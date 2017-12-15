@@ -84,6 +84,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ready() {
+Log.d("test", "list");
+        Commission.list(new Commission.ListCb() {
+            @Override
+            public void cb(List<CommissionItem> items) {
+
+            }
+        });
+     /*
 
         Commission.refresh(new Commission.RefreshCb() {
             @Override
@@ -91,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Commission.list(new Commission.ListCb() {
                     @Override
-                    public void cb(List<CommissionItem> items) {
 
                         for (CommissionItem item : items) {
                             if (item.getType().equals(CommissionItem.type_wifi)) {
@@ -131,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
                                 });
                             }
                         }
-
                     }
 
                     @Override
@@ -150,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+*/
         /*
         if (signalsId != 0) {
             Mist.cancel(signalsId);
