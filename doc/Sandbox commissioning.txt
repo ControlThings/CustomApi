@@ -32,22 +32,34 @@ mist ui-> sandboxed app: signal: commssion.finished { hint: list of peers in com
 else requesting access to an already commissioned device
 
 sandboxed app->mist ui: signal commssioning.start { wld item from list }
-note over sandboxed app: Notify user that we now wait for the owner of the device to let us in.
+
 note over mist ui 
 MistUI sends wld.friendRequest RPC to the local Wish core. 
-After some time, local Wish core might send up a signal to MistUi: "friendRequesteeAccepted".
-MistUi adds the peers to Sandbox.
+end note
+mist ui->sandboxed app: signal: commission.progress { hint: WAIT_FRIEND_REQ_RESP }
+note over sandboxed app: Notify user that we now wait for the owner of the device to let us in.
+note over mist ui
+After some time, MistUi gets signal from core: "friendRequesteeAccepted".
+When the new peers become online, MistUi adds the peers to Sandbox.
 end note
 
-opt owner of device lets us in
+alt owner of device lets us in
 mist ui->sandboxed app: signal: commissioning.finished { list of peers in commissionied device }
+else owner of device declines to let us in
+mist ui->sandboxed app: signal: commissioning.err { hint: "friend_req_denied" }
+else friend request timeout
+mist ui->sandboxed app: signal: commissioning.err { hint: "friend_req_timeout" }
 end
+
 
 note right of sandboxed app: if owner never lets us in, user should be notified after a timeout
 
-else wld commissioning (in case claim: true??)
-sandboxed app->mist ui: signal commssioning.start { wld item from list }
-mist ui->sandboxed app: signal: commissioning.finished { list of peers in commissionied device }
+else wld commissioning
+
+note left of  mist ui
+This case is identical with the previous one, 
+but you have the information in wld.list: such entries are "claim:true"
+end note
 
 end
 
