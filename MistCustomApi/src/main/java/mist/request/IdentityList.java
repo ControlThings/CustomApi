@@ -6,6 +6,7 @@ import org.bson.BSONException;
 import org.bson.BsonArray;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
+import org.bson.BsonDocumentReader;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
@@ -14,18 +15,26 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import mist.Peer;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
 
 
 class IdentityList {
-    static int request(Identity.ListCb callback) {
+    static int request(Peer peer, Identity.ListCb callback) {
         final String op = "wish.identity.list";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
         writer.writeStartArray("args");
+
+        if (peer != null) {
+            writer.pipe(new BsonDocumentReader(new RawBsonDocument(peer.toBson())));
+        } else {
+            writer.writeNull();
+        }
+
         writer.writeEndArray();
         writer.writeEndDocument();
         writer.flush();

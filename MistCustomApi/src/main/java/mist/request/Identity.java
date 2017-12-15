@@ -34,7 +34,11 @@ public class Identity {
      * @return
      */
     public static int list(ListCb callback) {
-        return IdentityList.request(callback);
+        return IdentityList.request(null, callback);
+    }
+
+    public static int list(Peer peer, ListCb callback) {
+        return IdentityList.request(peer, callback);
     }
 
     public static int get(byte[] uid, GetCb callback) {
