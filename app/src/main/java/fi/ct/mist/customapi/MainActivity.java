@@ -2,6 +2,7 @@ package fi.ct.mist.customapi;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -84,13 +85,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ready() {
-Log.d("test", "list");
-        Commission.list(new Commission.ListCb() {
-            @Override
-            public void cb(List<CommissionItem> items) {
 
-            }
-        });
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("market://details?id=fi.ct.mist"));
+        startActivity(intent);
      /*
 
         Commission.refresh(new Commission.RefreshCb() {

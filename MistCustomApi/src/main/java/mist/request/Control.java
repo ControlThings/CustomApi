@@ -17,44 +17,44 @@ public class Control {
         return ControlFollow.request(peer, callback);
     }
 
-    public static void model(Peer peer, ModelCb callback){
-        ControlModel.request(peer, callback);
+    public static int model(Peer peer, ModelCb callback){
+        return ControlModel.request(peer, callback);
     };
 
-    public static void write(Peer peer, String epid, Boolean state, Control.WriteCb callback) {
-        ControlWrite.request(peer, epid, state, callback);
+    public static int write(Peer peer, String epid, Boolean state, Control.WriteCb callback) {
+       return ControlWrite.request(peer, epid, state, callback);
     }
-    public static void write(Peer peer, String epid, int state, Control.WriteCb callback) {
-        ControlWrite.request(peer, epid, state, callback);
+    public static int write(Peer peer, String epid, int state, Control.WriteCb callback) {
+       return ControlWrite.request(peer, epid, state, callback);
     }
-    public static void write(Peer peer, String epid, float state, Control.WriteCb callback) {
-        ControlWrite.request(peer, epid, state, callback);
+    public static int write(Peer peer, String epid, float state, Control.WriteCb callback) {
+       return ControlWrite.request(peer, epid, state, callback);
     }
-    public static void write(Peer peer, String epid, String state, Control.WriteCb callback) {
-        ControlWrite.request(peer, epid, state, callback);
+    public static int write(Peer peer, String epid, String state, Control.WriteCb callback) {
+       return ControlWrite.request(peer, epid, state, callback);
     }
-    public static void read(Peer peer, String epid, Control.ReadCb callback) {
-        ControlRead.request(peer, epid, callback);
+    public static int read(Peer peer, String epid, Control.ReadCb callback) {
+       return ControlRead.request(peer, epid, callback);
     }
 
 
-    public static void invoke(Peer peer, String epid, InvokeCb callback) {
-        ControlInvoke.request(peer, epid, callback);
+    public static int invoke(Peer peer, String epid, InvokeCb callback) {
+        return ControlInvoke.request(peer, epid, callback);
     }
-    public static void invoke(Peer peer, String epid, String value, InvokeCb callback) {
-        ControlInvoke.request(peer, epid, value, callback);
+    public static int invoke(Peer peer, String epid, String value, InvokeCb callback) {
+        return ControlInvoke.request(peer, epid, value, callback);
     }
-    public static void invoke(Peer peer, String epid, Boolean value, InvokeCb callback) {
-        ControlInvoke.request(peer, epid, value, callback);
+    public static int invoke(Peer peer, String epid, Boolean value, InvokeCb callback) {
+       return ControlInvoke.request(peer, epid, value, callback);
     }
-    public static void invoke(Peer peer, String epid, int value, InvokeCb callback) {
-        ControlInvoke.request(peer, epid, value, callback);
+    public static int invoke(Peer peer, String epid, int value, InvokeCb callback) {
+        return ControlInvoke.request(peer, epid, value, callback);
     }
-    public static void invoke(Peer peer, String epid, float value, InvokeCb callback) {
-        ControlInvoke.request(peer, epid, value, callback);
+    public static int invoke(Peer peer, String epid, float value, InvokeCb callback) {
+       return ControlInvoke.request(peer, epid, value, callback);
     }
-    public static void invoke(Peer peer, String epid, byte[] value, InvokeCb callback) {
-        ControlInvoke.request(peer, epid, value, callback);
+    public static int invoke(Peer peer, String epid, byte[] value, InvokeCb callback) {
+        return ControlInvoke.request(peer, epid, value, callback);
     }
 
     public abstract static class FollowCb extends Callback {

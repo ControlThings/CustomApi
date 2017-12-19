@@ -25,6 +25,9 @@ public class Identity {
     }
 
     public static int create(Peer peer, String alias, CreateCb callback) {
+        if (peer == null) {
+            return 0;
+        }
         return IdentityCreate.request(peer, alias, callback);
     }
 
@@ -38,6 +41,9 @@ public class Identity {
     }
 
     public static int list(Peer peer, ListCb callback) {
+        if (peer == null) {
+            return 0;
+        }
         return IdentityList.request(peer, callback);
     }
 
@@ -46,6 +52,9 @@ public class Identity {
     };
 
     public static int get(Peer peer, byte[] uid, GetCb callback) {
+        if (peer == null) {
+            return 0;
+        }
         return IdentityGet.request(peer, uid, callback);
     };
 
@@ -58,35 +67,50 @@ public class Identity {
     }
 
     public static int update(Peer peer, mist.Identity identity, String alias, UpdateCb callback) {
+        if (peer == null) {
+            return 0;
+        }
         return IdentityUpdate.request(peer, identity, alias, null, callback);
     }
 
     public static int update(Peer peer, mist.Identity identity, BsonDocument meta, UpdateCb callback) {
+        if (peer == null) {
+            return 0;
+        }
         return IdentityUpdate.request(peer, identity, null, meta, callback);
     }
 
-    public static void friendRequest(byte[] uid, BsonDocument contact, FriendRequestCb callback) {
-        IdentityFriendRequest.request(null, uid, contact, callback);
+    public static int friendRequest(byte[] uid, BsonDocument contact, FriendRequestCb callback) {
+        return IdentityFriendRequest.request(null, uid, contact, callback);
     }
 
     public static void friendRequest(Peer peer, byte[] uid, BsonDocument contact, FriendRequestCb callback) {
+        if (peer == null) {
+            return;
+        }
         IdentityFriendRequest.request(peer, uid, contact, callback);
     }
 
-    public static void friendRequestAccept(byte[] luid,  byte[] ruid, FriendRequestAcceptCb callback) {
-        IdentityFriendRequestAccept.request(null, luid, ruid, callback);
+    public static int friendRequestAccept(byte[] luid,  byte[] ruid, FriendRequestAcceptCb callback) {
+       return IdentityFriendRequestAccept.request(null, luid, ruid, callback);
     }
 
-    public static void friendRequestAccept(Peer peer, byte[] luid,  byte[] ruid, FriendRequestAcceptCb callback) {
-        IdentityFriendRequestAccept.request(peer, luid, ruid, callback);
+    public static int friendRequestAccept(Peer peer, byte[] luid,  byte[] ruid, FriendRequestAcceptCb callback) {
+        if (peer == null) {
+            return 0;
+        }
+        return IdentityFriendRequestAccept.request(peer, luid, ruid, callback);
     }
 
-    public static void friendRequestList(FriendRequestListCb callback) {
-        IdentityFriendRequestList.request(null, callback);
+    public static int friendRequestList(FriendRequestListCb callback) {
+       return IdentityFriendRequestList.request(null, callback);
     }
 
-    public static void friendRequestList(Peer peer, FriendRequestListCb callback) {
-        IdentityFriendRequestList.request(peer, callback);
+    public static int friendRequestList(Peer peer, FriendRequestListCb callback) {
+        if (peer == null) {
+            return 0;
+        }
+        return  IdentityFriendRequestList.request(peer, callback);
     }
 
     public static int friendRequestDecline(byte[] luid, byte[] ruid, FriendRequestDeclineCb callback) {
@@ -94,6 +118,9 @@ public class Identity {
     }
 
     public static int friendRequestDecline(Peer peer, byte[] luid, byte[] ruid, FriendRequestDeclineCb callback) {
+        if (peer == null) {
+            return 0;
+        }
         return IdentityFriendRequestDecline.request(peer, luid, ruid, callback);
     }
 

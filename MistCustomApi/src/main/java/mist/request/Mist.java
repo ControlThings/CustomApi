@@ -18,11 +18,14 @@ public class Mist {
     }
 
     public static int signals(Peer peer, SignalsCb callback) {
+        if (peer == null) {
+            return 0;
+        }
         return MistSignals.request(peer, callback);
     }
 
-    public static void listPeers(ListPeersCb callback) {
-        MistListPeers.request(callback);
+    public static int listPeers(ListPeersCb callback) {
+        return MistListPeers.request(callback);
     }
 
     public static void login(LoginCb callback) {
