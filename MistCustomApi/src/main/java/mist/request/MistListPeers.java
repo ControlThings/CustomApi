@@ -11,6 +11,7 @@ import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import mist.Peer;
 import mist.RequestInterface;
@@ -48,7 +49,7 @@ class MistListPeers {
             }
 
             private void response(byte[] dataBson) {
-                ArrayList<Peer> peers = new ArrayList<Peer>();
+                List<Peer> peers = new ArrayList<Peer>();
                 BsonDocument bson = new RawBsonDocument(dataBson);
 
                 BsonArray bsonListServices = bson.getArray("data");

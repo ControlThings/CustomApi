@@ -3,6 +3,7 @@ package mist.request;
 import org.bson.BsonDocument;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import mist.Peer;
 import mist.RequestInterface;
@@ -38,7 +39,7 @@ public class Mist {
     }
 
     public abstract static class ListPeersCb extends Callback {
-        public abstract void cb(ArrayList<Peer> peers);
+        public abstract void cb(List<Peer> peers);
     }
 
     public abstract static class LoginCb extends Callback {

@@ -43,7 +43,6 @@ class CommissionProgress {
             private void response(byte[] data) {
 
                 String state;
-                int progress;
                 try {
                     BsonDocument bsonDocument = new RawBsonDocument(data);
                     BsonArray bsonArray = bsonDocument.getArray("data");

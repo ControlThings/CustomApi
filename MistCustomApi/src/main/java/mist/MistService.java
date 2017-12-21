@@ -28,6 +28,7 @@ public class MistService extends Service {
         Log.d(TAG, "onStartCommand");
 
         if (!started) {
+            started = true;
             String name;
             if (intent.hasExtra("name")) {
                 name = intent.getStringExtra("name");
@@ -41,9 +42,7 @@ public class MistService extends Service {
                 }
                 name = (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
             }
-
             mistApiBridgeJni = new MistApiBridgeJni(this.getBaseContext(), name);
-            started = true;
         }
         return Service.START_NOT_STICKY;
     }
