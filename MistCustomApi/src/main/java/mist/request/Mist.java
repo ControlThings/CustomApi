@@ -34,8 +34,11 @@ public class Mist {
     }
 
     public abstract static class SignalsCb extends Callback {
-        public void cb(String signal) {};
-        public void cb(String signal, BsonDocument document) {};
+        public void cb(String signal) {
+        }
+
+        public void cb(String signal, BsonDocument document) {
+        }
     }
 
     public abstract static class ListPeersCb extends Callback {
@@ -51,5 +54,17 @@ public class Mist {
     }
 
 
+    public static class Signals {
+        public static String Peers = "peers";
+        public static String FriendRequest = "friendRequest";
+        public static String Ready = "ready";
+        public static String CommissionProgress = "commission.progress";
+        public static String CommissionRefresh = "commission.refresh";
+        public static String CommissionSetWifi = "commission.setWifi";
+        public static String Commission = "commission";
+        private static String CommissionList = "commission.list";
+        private static String SandboxedSettings = "sandboxed.settings";
+        private static String SandboxedLogin = "sandboxed.login";
+    }
 }
 
