@@ -32,12 +32,16 @@ class MistApiBridge {
 
     private final static String pref = "mist_pref";
 
+    private Intent mistSandbox = new Intent();
+
+
     private Context context;
     private boolean mBound = false;
     private MistApiBridgeJni jni;
     private AppToMist appToMist;
     private String appName;
     private boolean logined = false;
+    private boolean mistSandboxStarting = false;
 
     private Binder binder;
 
@@ -50,10 +54,12 @@ class MistApiBridge {
     }
 
     private void startSandboxService() {
-        Intent mistSandbox = new Intent();
         mistSandbox.setComponent(new ComponentName("fi.ct.mist", "fi.ct.mist.sandbox.Sandbox"));
-        context.startService(mistSandbox);
-        context.bindService(mistSandbox, mConnection, 0);
+        if (!mistSandboxStarting) {
+            context.startService(mistSandbox);
+            mBound = context.bindService(mistSandbox, mConnection, 0);
+        }
+        mistSandboxStarting = true;
     }
 
     private byte[] getId() {
@@ -74,19 +80,19 @@ class MistApiBridge {
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            mBound = true;
             Log.d(TAG, "onServiceConnected");
             appToMist = AppToMist.Stub.asInterface(iBinder);
             login();
+            mistSandboxStarting = false;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             // We never get here for some reason
             Log.d(TAG, "onServiceDisconnected");
-            mBound = false;
             logined = false;
             jni.connected(false);
+            mistSandboxStarting = false;
         }
     };
 
@@ -183,7 +189,7 @@ class MistApiBridge {
 
 
     void unBind() {
-        Log.d(TAG, "UNBIND");
+        Log.d(TAG, "UNBIND: " + mBound);
         jni.connected(false);
 
         if (logined) {
@@ -197,11 +203,14 @@ class MistApiBridge {
             }
 
         }
+
         if (mBound) {
-            //  mBound = false;
+            mBound = false;
+            mistSandboxStarting = false;
             context.unbindService(mConnection);
         } else {
             Log.d(TAG, "Not bound when unbinding");
         }
+
     }
 }
