@@ -89,29 +89,29 @@ class ControlInvoke {
             }
 
             private void response(byte[] dataBson) {
-
+                BsonDocument bson;
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
-                    if (bson.get("data").isBoolean()) {
-                        callback.cbBoolean(bson.get("data").asBoolean().getValue());
-                    } else if (bson.get("data").isInt32()) {
-                        callback.cbInt(bson.get("data").asInt32().getValue());
-                    } else if (bson.get("data").isDouble()) {
-                        float value = (float) bson.get("data").asDouble().getValue();
-                        callback.cbFloat(value);
-                    } else if (bson.get("data").isString()) {
-                        callback.cbString(bson.get("data").asString().getValue());
-                    } else if (bson.get("data").isBinary()) {
-                        callback.cbByte(bson.get("data").asBinary().getData());
-                    } else if (bson.get("data").isArray()) {
-                        callback.cbArray(bson.get("data").asArray());
-                    } else if (bson.get("data").isDocument()) {
-                        callback.cbDocument(bson.get("data").asDocument());
-                    }
+                    bson = new RawBsonDocument(dataBson);
                 } catch (BSONException e) {
-                    callback.err(326, e.getMessage());
+                    callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
+                    return;
                 }
-
+                if (bson.get("data").isBoolean()) {
+                    callback.cbBoolean(bson.get("data").asBoolean().getValue());
+                } else if (bson.get("data").isInt32()) {
+                    callback.cbInt(bson.get("data").asInt32().getValue());
+                } else if (bson.get("data").isDouble()) {
+                    float value = (float) bson.get("data").asDouble().getValue();
+                    callback.cbFloat(value);
+                } else if (bson.get("data").isString()) {
+                    callback.cbString(bson.get("data").asString().getValue());
+                } else if (bson.get("data").isBinary()) {
+                    callback.cbByte(bson.get("data").asBinary().getData());
+                } else if (bson.get("data").isArray()) {
+                    callback.cbArray(bson.get("data").asArray());
+                } else if (bson.get("data").isDocument()) {
+                    callback.cbDocument(bson.get("data").asDocument());
+                }
             }
 
             @Override

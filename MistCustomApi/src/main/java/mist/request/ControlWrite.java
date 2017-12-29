@@ -78,7 +78,6 @@ class ControlWrite {
             }
 
             private void response(byte[] dataBson) {
-                BsonDocument bson = new RawBsonDocument(dataBson);
                 callback.cb();
             }
 

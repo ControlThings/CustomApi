@@ -2,6 +2,7 @@ package mist.request;
 
 import android.os.RemoteException;
 
+import org.bson.BSONException;
 import org.bson.BsonArray;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
@@ -16,6 +17,8 @@ import java.util.List;
 import mist.Peer;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
+
+import static mist.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 11/29/16.
@@ -49,14 +52,20 @@ class MistListPeers {
             }
 
             private void response(byte[] dataBson) {
-                List<Peer> peers = new ArrayList<Peer>();
-                BsonDocument bson = new RawBsonDocument(dataBson);
+                List<Peer> peers;
+                try {
+                    peers = new ArrayList<Peer>();
+                    BsonDocument bson = new RawBsonDocument(dataBson);
 
-                BsonArray bsonListServices = bson.getArray("data");
-                for (BsonValue bsonValue: bsonListServices) {
-                    BsonDocument peerDocument = bsonValue.asDocument();
-                    Peer peer = Peer.fromBson(peerDocument);
-                    peers.add(peer);
+                    BsonArray bsonListServices = bson.getArray("data");
+                    for (BsonValue bsonValue : bsonListServices) {
+                        BsonDocument peerDocument = bsonValue.asDocument();
+                        Peer peer = Peer.fromBson(peerDocument);
+                        peers.add(peer);
+                    }
+                } catch (BSONException e) {
+                    callback.err(mist.request.Callback.BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
                 callback.cb(peers);
             }

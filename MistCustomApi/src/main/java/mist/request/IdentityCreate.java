@@ -55,14 +55,16 @@ class IdentityCreate {
             }
 
             private void response(byte[] data) {
+                mist.Identity identity;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonDocument = bson.getDocument("data");
-                    mist.Identity identity = mist.Identity.fromBson(bsonDocument);
-                    callback.cb(identity);
+                    identity = mist.Identity.fromBson(bsonDocument);
                 } catch (BSONException e) {
                     callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
+                    return;
                 }
+                callback.cb(identity);
             }
 
             @Override

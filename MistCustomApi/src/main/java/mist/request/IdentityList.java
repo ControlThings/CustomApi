@@ -54,17 +54,19 @@ class IdentityList {
             }
 
             private void response(byte[] data) {
+                List<mist.Identity> list;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonArray bsonList = bson.getArray("data");
-                    List<mist.Identity> list = new ArrayList<mist.Identity>();
+                    list = new ArrayList<mist.Identity>();
                     for (BsonValue bsonIdentity : bsonList) {
                         list.add(mist.Identity.fromBson(bsonIdentity.asDocument()));
                     }
-                    callback.cb(list);
                 } catch (BSONException e) {
                     callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
+                    return;
                 }
+                callback.cb(list);
             }
 
             @Override

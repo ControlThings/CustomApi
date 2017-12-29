@@ -69,13 +69,15 @@ class IdentityFriendRequest {
             }
 
             private void response(byte[] dataBson) {
+                boolean state;
                 try {
                     BsonDocument bson = new RawBsonDocument(dataBson);
-                    boolean state = bson.get("data").asBoolean().getValue();
-                    callback.cb(state);
+                    state = bson.get("data").asBoolean().getValue();
                 } catch (BSONException e) {
-                    callback.err(326, e.getMessage());
+                    callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
+                    return;
                 }
+                callback.cb(state);
             }
 
             @Override

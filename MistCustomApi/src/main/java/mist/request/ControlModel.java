@@ -56,14 +56,17 @@ class ControlModel {
             }
 
             private void response(byte[] dataBson) {
-                BsonDocument bson = new RawBsonDocument(dataBson);
-                BsonDocument bsonDocument = bson.get("data").asDocument();
+                JSONObject jsonObject;
                 try {
-                    callback.cb(new JSONObject(bsonDocument.toJson()));
+
+                    BsonDocument bson = new RawBsonDocument(dataBson);
+                    BsonDocument bsonDocument = bson.get("data").asDocument();
+                    jsonObject = new JSONObject(bsonDocument.toJson());
                 } catch (JSONException e) {
-                    Log.d(op, "Json parsing error: " + e);
+                    callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
                     return;
                 }
+                callback.cb(jsonObject);
             }
 
             @Override

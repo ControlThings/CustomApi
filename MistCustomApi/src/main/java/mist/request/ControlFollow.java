@@ -1,7 +1,9 @@
 package mist.request;
 
 import android.os.RemoteException;
+import android.util.Log;
 
+import org.bson.BSONException;
 import org.bson.BsonBinary;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
@@ -10,6 +12,7 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
+import mist.CommissionItem;
 import mist.Peer;
 import mist.RequestInterface;
 import mist.sandbox.Callback;
@@ -28,7 +31,8 @@ class ControlFollow {
         writer.writeBinaryData("luid", new BsonBinary(peer.getLuid()));
         writer.writeBinaryData("ruid", new BsonBinary(peer.getRuid()));
         writer.writeBinaryData("rhid", new BsonBinary(peer.getRhid()));
-        writer.writeBinaryData("rsid", new BsonBinary(peer.getRsid()));;
+        writer.writeBinaryData("rsid", new BsonBinary(peer.getRsid()));
+        ;
         writer.writeString("protocol", peer.getProtocol());
         writer.writeBoolean("online", peer.isOnline());
         writer.writeEndDocument();
@@ -52,10 +56,21 @@ class ControlFollow {
             }
 
             private void response(final byte[] dataBson) {
-                BsonDocument bson = new RawBsonDocument(dataBson);
-                BsonDocument followData = bson.get("data").asDocument();
-                BsonValue followValue = followData.get("data");
-                String followEpid = followData.getString("id").getValue();
+                BsonValue followValue;
+                String followEpid;
+                try {
+                    BsonDocument bson = new RawBsonDocument(dataBson);
+
+                    Log.d("FOLLOW", "Res: " + bson.toJson());
+
+                    BsonDocument followData = bson.get("data").asDocument();
+                    followValue = followData.get("data");
+                    followEpid = followData.getString("id").getValue();
+
+                } catch (BSONException e) {
+                    callback.err(mist.request.Callback.BSON_ERROR_CODE, mist.request.Callback.BSON_ERROR_STRING);
+                    return;
+                }
                 if (followValue.isBoolean()) {
                     callback.cbBool(followEpid, followValue.asBoolean().getValue());
                 }
@@ -69,6 +84,7 @@ class ControlFollow {
                 if (followValue.isString()) {
                     callback.cbString(followEpid, followValue.asString().getValue());
                 }
+
             }
 
             @Override
