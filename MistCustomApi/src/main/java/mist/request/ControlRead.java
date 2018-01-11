@@ -1,6 +1,7 @@
 package mist.request;
 
 import android.os.RemoteException;
+import android.util.Log;
 
 import org.bson.BSONException;
 import org.bson.BsonBinary;
@@ -15,6 +16,7 @@ import mist.RequestInterface;
 import mist.sandbox.Callback;
 
 class ControlRead {
+    static final String TAG = "ControlRead";
 
     static int request(Peer peer, String epid, Control.ReadCb callback) {
         final String op = "mist.control.read";
@@ -70,6 +72,8 @@ class ControlRead {
                     callback.cbFloat(value);
                 } else if (bson.get("data").isString()) {
                     callback.cbString(bson.get("data").asString().getValue());
+                } else {
+                    Log.d(TAG, "Can't handle this read result: " + bson.toJson());
                 }
             }
 
