@@ -86,76 +86,88 @@ public class MainActivity extends AppCompatActivity {
 
     private void ready() {
 
+        //Intent intent = new Intent(Intent.ACTION_VIEW);
+        //intent.setData(Uri.parse("market://details?id=fi.ct.mist"));
+        //startActivity(intent);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("market://details?id=fi.ct.mist"));
-        startActivity(intent);
-     /*
-
-        Commission.refresh(new Commission.RefreshCb() {
+        Commission.list(new Commission.ListCb() {
             @Override
-            public void cb() {
+            public void cb(List<CommissionItem> items) {
+                Log.d("commission", "list");
 
-                Commission.list(new Commission.ListCb() {
-                    @Override
+                for (CommissionItem item : items) {
+                    if (item.getType().equals(CommissionItem.type_local)) {
 
-                        for (CommissionItem item : items) {
-                            if (item.getType().equals(CommissionItem.type_wifi)) {
+                        Log.d("commissionlist", "item: "+ item.getName());
 
+                        if (item.getName().contains("André (CT)")) {
+                            Commission.start(item, new Commission.StartCb() {
+                                @Override
+                                public void cb(List<WifiItem> items) {
+                                    Log.d("commission", "startCb");
+                                }
 
-                                Commission.start(item, new Commission.StartCb() {
-                                    @Override
-                                    public void cb(List<WifiItem> items) {
+                                @Override
+                                public void finished(List<Peer> items) {
+                                    Log.d("commission", "startFinished");
 
-                                        for (WifiItem wifiItem : items) {
-                                            if (wifiItem.getSsid().contains("Buffalo")) {
-
-
-                                                Commission.setWifi(wifiItem, "19025995", new Commission.SetWifiCb() {
-                                                    @Override
-                                                    public void cb(List<Peer> peers) {
-                                                        Log.d("TEST", "finished " + peers.size());
-                                                    }
-
-                                                    @Override
-                                                    public void err(int code, String msg) {
-                                                        super.err(code, msg);
-                                                        Log.d("Test", "setWifi err " + msg);
-                                                    }
-                                                });
-                                            }
-                                        }
-
-
+                                    for(Peer peer : items) {
+                                        Log.d("commission", "peer: "+ peer.toString());
                                     }
-
-                                    @Override
-                                    public void err(int code, String msg) {
-                                        super.err(code, msg);
-                                        Log.d("Test", "start err " + msg);
-                                    }
-                                });
-                            }
+                                }
+                            });
                         }
-                    }
 
-                    @Override
-                    public void err(int code, String msg) {
-                        super.err(code, msg);
-                        Log.d("Test", "list err " + msg);
-                    }
-                });
+                        /*
+                        Commission.start(item, new Commission.StartCb() {
+                            @Override
+                            public void cb(List<WifiItem> items) {
 
+                                for (WifiItem wifiItem : items) {
+                                    if (wifiItem.getSsid().contains("Buffalo")) {
+
+
+                                        Commission.setWifi(wifiItem, "19025995", new Commission.SetWifiCb() {
+                                            @Override
+                                            public void cb(List<Peer> peers) {
+                                                Log.d("TEST", "finished " + peers.size());
+                                            }
+
+                                            @Override
+                                            public void err(int code, String msg) {
+                                                super.err(code, msg);
+                                                Log.d("Test", "setWifi err " + msg);
+                                            }
+                                        });
+                                    }
+                                }
+
+
+                            }
+
+                            @Override
+                            public void err(int code, String msg) {
+                                super.err(code, msg);
+                                Log.d("Test", "start err " + msg);
+                            }
+
+                            @Override
+                            public void finished(List<Peer> items) {
+
+                            }
+                        });
+                        */
+                    }
+                }
             }
 
             @Override
             public void err(int code, String msg) {
                 super.err(code, msg);
-                Log.d("Test", "refresh err " + msg);
-
+                Log.d("Test", "list err " + msg);
             }
         });
-*/
+
         /*
         if (signalsId != 0) {
             Mist.cancel(signalsId);
