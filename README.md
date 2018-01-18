@@ -3,7 +3,7 @@
 
 ###Requirements
  
- You will need [Mist p2p service](https://play.google.com/store/apps/details?id=fi.ct.wish) and [Mist Generic Tool](https://play.google.com/store/apps/details?id=fi.ct.mist) apps instaled on your phone to be able to use Mist CustomApi.
+ You will need [Mist p2p service](https://mist.controlthings.fi/dist/Wish-v0.4.0-beta-3.apk) and [Mist Generic Tool](https://mist.controlthings.fi/dist/MistUi-v0.6.0-beta-3.apk) apps instaled on your phone to be able to use Mist CustomApi.
  
 ### Configuration in Android Studio
 
